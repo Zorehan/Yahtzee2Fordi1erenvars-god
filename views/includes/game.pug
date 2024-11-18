@@ -1,15 +1,22 @@
-html 
-    body 
-        .div 
-            .dice
-                .diceClass.diceOpen
-                 img#dice1(src="/img/sortbox.png")
-                .diceClass.diceOpen
-                 img#dice2(src="/img/sortbox.png")
-                .diceClass.diceOpen
-                 img#dice3(src="/img/sortbox.png")
-                .diceClass.diceOpen
+ 
+.div 
+    .box    
+        .dice
+            .diceClass.diceOpen
+             img#dice1(src="/img/sortbox.png")
+            .diceClass.diceOpen
+             img#dice2(src="/img/sortbox.png")
+            .diceClass.diceOpen
+             img#dice3(src="/img/sortbox.png")
+            .diceClass.diceOpen
                  img#dice4(src="/img/sortbox.png")
-                .diceClass.diceOpen
-                 img#dice5(src="/img/sortbox.png")
-        .div
+            .diceClass.diceOpen
+             img#dice5(src="/img/sortbox.png")
+        .rollbar
+            p rolls left 
+            p(id="rollsLeftText") 3
+            .button
+              label Press button:
+              button#rollButton Roll
+    .box2 
+        
