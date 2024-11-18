@@ -9,8 +9,8 @@ html
         ul
             each user in users
                 li= user
-        if users.length > 1
-            form(action="/startGame" method="POST")
+        if users.length > 0
+            form(action="/start-game" method="POST")
                 button(type="submit") START GAME
         else
             p Waiting for more players...

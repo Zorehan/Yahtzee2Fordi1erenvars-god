@@ -1,0 +1,106 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        title Yahtzee Game
+        link(rel="stylesheet", href="style/layout.css")
+        script(src="game.js", defer)
+    body
+        h1 Yahtzee Game
+        p Player #{player}'s turn
+
+        #diceBox
+            #diceImages
+                img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice1", value="1", onclick="selectDice(1)")
+                img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice2", value="1", onclick="selectDice(2)")
+                img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice3", value="1", onclick="selectDice(3)")
+                img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice4", value="1", onclick="selectDice(4)")
+                img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice5", value="1", onclick="selectDice(5)")
+        #rollBar
+            p Rolls left:
+            p#rollsLeftText 3
+            button(onclick="rollButtonHandler()") Roll
+
+        #scoreBox
+            table
+                thead
+                    tr
+                        th Score
+                tbody
+                    tr
+                        td 1-ere:
+                        td
+                            input(type="number", id="aces", disabled)
+                    tr
+                        td 2-ere:
+                        td
+                            input(type="number", id="twos", disabled)
+                    tr
+                        td 3-ere:
+                        td
+                            input(type="number", id="threes", disabled)
+                    tr
+                        td 4-ere:
+                        td
+                            input(type="number", id="fours", disabled)
+                    tr
+                        td 5-ere:
+                        td
+                            input(type="number", id="fives", disabled)
+                    tr
+                        td 6-ere:
+                        td
+                            input(type="number", id="sixes", disabled)
+                    tr.totalRow
+                        td Samlet point øverst:
+                        td#upperTotal 0
+                    tr
+                        td Et Par
+                        td
+                            input(type="number", id="onePair", disabled)
+                    tr
+                        td To Par
+                        td
+                            input(type="number", id="twoPairs", disabled)
+                    tr
+                        td Tre ens:
+                        td
+                            input(type="number", id="threeOfAKind", disabled)
+                    tr
+                        td Fire ens:
+                        td
+                            input(type="number", id="fourOfAKind", disabled)
+                    tr
+                        td Fuld hus:
+                        td
+                            input(type="number", id="fullHouse", disabled)
+                    tr
+                        td Lille straight:
+                        td
+                            input(type="number", id="smallStraight", disabled)
+                    tr
+                        td Stor straight:
+                        td
+                            input(type="number", id="largeStraight", disabled)
+                    tr
+                        td Yahtzee:
+                        td
+                            input(type="number", id="yahtzee", disabled)
+                    tr
+                        td Chance:
+                        td
+                            input(type="number", id="chance", disabled)
+                    tr.totalRow
+                        td Samlet point nederest:
+                        td#lowerTotal 0
+                    tr.total
+                        td Samlet score:
+                        td#totalScore 0
+
+        #skins
+            button(id="Skin" onclick="onClickBlackDiceBtn()") BlackDice
+            button(id="Skin" onclick="onClickNumberedDiceBtn()") numberedDice3d
+
+        #turnEndButton
+            form(action="/end-turn", method="POST")
+                button(type="submit") End Turn

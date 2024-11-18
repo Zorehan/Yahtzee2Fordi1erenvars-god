@@ -96,6 +96,27 @@ app.get('/gameWaitingScreen', (request, response) => {
     }
 });
 
+let currentPlayer = 1;
+let gameInProgress = false;
+
+app.post('/start-game', (req, res) => {
+    currentPlayer = 1;
+    gameInProgress = true;
+    res.redirect('/game');
+});
+
+app.get('/game', (req, res) => {
+    if (!gameInProgress) {
+        return res.redirect('/');
+    }
+    res.render('game', { player: currentPlayer });
+});
+
+app.post('/end-turn', (req, res) => {
+    currentPlayer = currentPlayer === 1 ? 2 : 1;
+    res.redirect('/game');
+});
+
 app.listen(8443, '10.10.131.197', () => {
 });
 
