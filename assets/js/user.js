@@ -1,49 +1,37 @@
-const container = document.getElementById('#container')
-const id = document.querySelector('#id')
-const button = document.querySelector('#button')
-const playerImages = {id, url}
-const placeHolderImg = 'assets\\images\\image.png'
-const player = {id,navn,img}
 
-//button.onClick = () => {}
-button.addEventListener('click', async ()=>{
-    const res = await post('/create', {id: vareID})
-    console.log(res)
+const createAccount = document.querySelector('#createAccount')
 
-    if(res.status === "OK"){
-        res.innerHTML = ''
-    }else{
-        res.innerHTML = ''
+//createAccount functions
+createAccount.onclick = async () => {
+    try {
+        const content = await getInput('/createAccount') //web URL
+
+        await CreateUser("/assets/saveFiles/accounts/users.json", content);
+        window.location.href = "/menu";
+    } catch (e) {
+        //add more relevant ERRORS
     }
-})
+}
 
-async function post(url, objekt) {
-    const res = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(objekt),
-        headers: {'Content-Type': 'application/json'}
+
+async function CreateUser(path, content) {
+    const fs = require('node:fs');
+
+    fs.appendFile(path, content, err => {
+        if(err){
+            //ERROR message
+        }else{
+            //success message
+        }
     })
-    if(res.status !== "201"){
-        throw new Error()
-    }
-    return await res.json()
 }
 
-
-
-playerImages = []
-players = []
-
-function addUser(id, name, img){
-    if(!image){
-        image = placeHolderImg
+async function getInput(url) {
+    try{
+        res = await fetch(url, {userName: userName.value, password: password.value}) //gets inputfield values
+        return await res.json()
+    }catch(err){
+        return err
     }
-
-    const user = {"playerID": id, "playerName": name, "profileImg": img}
-    
-    JSON.parse(user)
-};
-
-function addImg(url){
-    varer.add(new vareImages(url))
 }
+
