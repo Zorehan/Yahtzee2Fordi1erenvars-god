@@ -182,14 +182,16 @@ function setFieldAvailability(fieldId, isAvailable) {
 function updateGameState(category, score) {
     fetch('/api/update-score', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ category, score }),
-        headers: {
-            'Content-Type': 'application/json',
-        },
     })
         .then((response) => response.json())
         .then((data) => {
-            console.log(data);
+            if (data.success) {
+                console.log('Score updated successfully:', data.gameState);
+            } else {
+                console.error('Error updating score:', data.message);
+            }
         });
 }
 
@@ -221,4 +223,66 @@ function updateScoreFields(){
             field.value = score;
         }
     })
+}
+
+function resetScoreFields(){
+    document.querySelectorAll('input[type="number"]').forEach(field => {
+        if(!field.classList.contains('held')){
+            field.value = ""
+        }
+
+    })
+}
+
+document.querySelectorAll('input[type="number"]').forEach(field => {
+    field.addEventListener('click', function() {
+        if (rollsLeft < 3 && !this.disabled) {
+            this.classList.add('held')
+            this.disabled = true;
+
+            resetScoreFields()
+            updateTotals();
+            endTurn();
+        }
+    });
+});
+
+function updateTotals() {
+    let upperTotal = 0;
+    let lowerTotal = 0;
+
+    const upperFields = ['aces', 'twos', 'threes', 'fours', 'fives', 'sixes'];
+    upperFields.forEach(id => {
+        let field = document.getElementById(id);
+        if (field.value !== '') {
+            upperTotal += parseInt(field.value);
+        }
+    });
+
+    const lowerFields = ['onePair', 'twoPairs', 'threeOfAKind', 'fourOfAKind', 'fullHouse', 'smallStraight', 'largeStraight', 'yahtzee', 'chance'];
+    lowerFields.forEach(id => {
+        let field = document.getElementById(id);
+        if (field.value !== '') {
+            lowerTotal += parseInt(field.value);
+        }
+    });
+
+    if(upperTotal >= 63){
+        upperTotal += 50
+    }
+    document.getElementById('upperTotal').innerText = upperTotal;
+    document.getElementById('lowerTotal').innerText = lowerTotal;
+
+    document.getElementById('totalScore').innerText = upperTotal + lowerTotal;
+
+}
+
+function endTurn() {
+    fetch('/end-turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(gameState), // Send the current game state
+    }).then(() => {
+        window.location.href = '/game'; // Reload for the next player's turn
+    });
 }

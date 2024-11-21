@@ -23,27 +23,52 @@ const loginsPath = path.join(__dirname, 'assets', 'playerLogins');
 let playerLogins = {};
 let lobbyUsers = [];
 
-let gameState = {
-    diceResults: [1, 1, 1, 1, 1],
-    diceHeld: [false, false, false, false, false],
-    rollsLeft: 3,
-    diceSkin: 'whiteDice',
-    scores: {
-        aces: 0,
-        twos: 0,
-        threes: 0,
-        fours: 0,
-        fives: 0,
-        sixes: 0,
-        onePair: 0,
-        twoPairs: 0,
-        threeOfAKind: 0,
-        fourOfAKind: 0,
-        fullHouse: 0,
-        smallStraight: 0,
-        largeStraight: 0,
-        yahtzee: 0,
-        chance: 0,
+let gameStates = {
+    player1: {
+        diceResults: [1, 1, 1, 1, 1],
+        diceHeld: [false, false, false, false, false],
+        rollsLeft: 3,
+        diceSkin: 'whiteDice',
+        scores: {
+            aces: 0,
+            twos: 0,
+            threes: 0,
+            fours: 0,
+            fives: 0,
+            sixes: 0,
+            onePair: 0,
+            twoPairs: 0,
+            threeOfAKind: 0,
+            fourOfAKind: 0,
+            fullHouse: 0,
+            smallStraight: 0,
+            largeStraight: 0,
+            yahtzee: 0,
+            chance: 0,
+        },
+    },
+    player2: {
+        diceResults: [1, 1, 1, 1, 1],
+        diceHeld: [false, false, false, false, false],
+        rollsLeft: 3,
+        diceSkin: 'whiteDice',
+        scores: {
+            aces: 0,
+            twos: 0,
+            threes: 0,
+            fours: 0,
+            fives: 0,
+            sixes: 0,
+            onePair: 0,
+            twoPairs: 0,
+            threeOfAKind: 0,
+            fourOfAKind: 0,
+            fullHouse: 0,
+            smallStraight: 0,
+            largeStraight: 0,
+            yahtzee: 0,
+            chance: 0,
+        },
     },
 };
 
@@ -129,14 +154,22 @@ app.get('/game', (req, res) => {
     if (!gameInProgress) {
         return res.redirect('/');
     }
+    const currentGameState = currentPlayer === 1 ? gameStates.player1 : gameStates.player2;
     res.render('game', {
         player: currentPlayer,
-        gameState: gameState
+        gameState: currentGameState, // Send latest state
     });
 });
 
 app.post('/end-turn', (req, res) => {
-    currentPlayer = currentPlayer === 1 ? 2 : 1;
+    const { gameState } = req.body;
+    if (currentPlayer === 1) {
+        gameStates.player1 = { ...gameStates.player1, ...gameState }; // Merge updates
+        currentPlayer = 2;
+    } else {
+        gameStates.player2 = { ...gameStates.player2, ...gameState }; // Merge updates
+        currentPlayer = 1;
+    }
     res.redirect('/game');
 });
 
@@ -176,11 +209,13 @@ app.post('/api/change-skin', (req, res) => {
 
 app.post('/api/update-score', (req, res) => {
     const { category, score } = req.body;
-    if (gameState.scores.hasOwnProperty(category)) {
-        gameState.scores[category] = score;
-        res.json(gameState);
+    const currentGameState = currentPlayer === 1 ? gameStates.player1 : gameStates.player2;
+
+    if (currentGameState.scores.hasOwnProperty(category)) {
+        currentGameState.scores[category] = score; // Update score
+        res.json({ success: true, gameState: currentGameState });
     } else {
-        res.status(400).json({ message: 'Invalid score category' });
+        res.status(400).json({ success: false, message: 'Invalid score category' });
     }
 });
 
