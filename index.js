@@ -8,7 +8,7 @@ app.use(express.static('assets'))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}));
 app.set('view engine', 'pug');
-app.use(express.static('assets'))
+app.use(express.static(path.join(__dirname, 'assets')));
 
 app.use(
     session({
@@ -196,6 +196,6 @@ app.get('/api/game-state', (req, res) => {
     res.json(gameState);
 });
 
-app.listen(8443, '10.10.131.197', () => {
-    console.log('Server running on http://10.10.131.197:8443');
+app.listen(8443, '192.168.213.207', () => {
+    console.log('Server running on http://192.168.213.207:8443');
 });

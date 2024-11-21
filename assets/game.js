@@ -59,15 +59,14 @@ function onClickNumberedDiceBtn() {
         .catch(error => console.error('Error changing dice skin:', error));
 }
 
-// Update game state based on the API response
+
 function updateGameState(gameState) {
-    // Update the number of rolls left
     document.getElementById('rollsLeftText').textContent = gameState.rollsLeft;
 
-    // Update dice images
     for (let i = 0; i < 5; i++) {
         const die = document.getElementById(`dice${i + 1}`);
-        die.src = `/assets/diceSetsFolder/${gameState.diceSkin}/dice-${gameState.diceResults[i]}.png`;
+        die.src = `/diceSetsFolder/${gameState.diceSkin}/dice-${gameState.diceResults[i]}.png`;
+        console.log(die.src)
         if (gameState.diceHeld[i]) {
             die.classList.add('held');
         } else {
@@ -75,13 +74,21 @@ function updateGameState(gameState) {
         }
     }
 
-    // Update scores (example for Aces)
     document.getElementById('aces').value = gameState.scores.aces;
     document.getElementById('twos').value = gameState.scores.twos;
     document.getElementById('threes').value = gameState.scores.threes;
-    // Repeat for all other score categories...
-
-    // Update the totals
+    document.getElementById("fours").value = gameState.scores.fours;
+    document.getElementById("fives").values = gameState.scores.fives;
+    document.getElementById("sixes").values = gameState.scores.fives;
+    document.getElementById("onePair").values = gameState.scores.fives;
+    document.getElementById("twoPairs").values = gameState.scores.fives;
+    document.getElementById("threeOfAKind").values = gameState.scores.fives;
+    document.getElementById("fourOfAKind").values = gameState.scores.fives;
+    document.getElementById("fullHouse").values = gameState.scores.fives;
+    document.getElementById("smallStraight").values = gameState.scores.fives;
+    document.getElementById("largeStraight").values = gameState.scores.fives;
+    document.getElementById("yahtzee").values = gameState.scores.fives;
+    document.getElementById("chance").values = gameState.scores.fives;
     document.getElementById('upperTotal').textContent = gameState.upperTotal;
     document.getElementById('lowerTotal').textContent = gameState.lowerTotal;
     document.getElementById('totalScore').textContent = gameState.totalScore;
