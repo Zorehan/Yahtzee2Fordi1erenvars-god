@@ -157,17 +157,17 @@ app.get('/game', (req, res) => {
     const currentGameState = currentPlayer === 1 ? gameStates.player1 : gameStates.player2;
     res.render('game', {
         player: currentPlayer,
-        gameState: currentGameState, // Send latest state
+        gameState: currentGameState,
     });
 });
 
 app.post('/end-turn', (req, res) => {
     const { gameState } = req.body;
     if (currentPlayer === 1) {
-        gameStates.player1 = { ...gameStates.player1, ...gameState }; // Merge updates
+        gameStates.player1 = { ...gameStates.player1, ...gameState };
         currentPlayer = 2;
     } else {
-        gameStates.player2 = { ...gameStates.player2, ...gameState }; // Merge updates
+        gameStates.player2 = { ...gameStates.player2, ...gameState };
         currentPlayer = 1;
     }
     res.redirect('/game');
@@ -188,7 +188,7 @@ app.post('/api/roll', (req, res) => {
 });
 
 app.post('/api/select-dice', (req, res) => {
-    const { index } = req.body; // index of the dice to toggle (1-5)
+    const { index } = req.body;
     if (index >= 1 && index <= 5) {
         gameState.diceHeld[index - 1] = !gameState.diceHeld[index - 1];
         res.json(gameState);

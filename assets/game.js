@@ -61,9 +61,6 @@ function checkValidFields() {
             if (!field.classList.contains('held')) field.disabled = false;
         });
 
-        let counts = countDice(diceResults);
-
-        // Upper Section
         setFieldAvailability('aces', numberOfCategory(diceResults, 1) > 0);
         setFieldAvailability('twos', numberOfCategory(diceResults, 2) > 0);
         setFieldAvailability('threes', numberOfCategory(diceResults, 3) > 0);
@@ -71,7 +68,6 @@ function checkValidFields() {
         setFieldAvailability('fives', numberOfCategory(diceResults, 5) > 0);
         setFieldAvailability('sixes', numberOfCategory(diceResults, 6) > 0);
 
-        // Lower Section
         setFieldAvailability("onePair", onePair(diceResults) > 0);
         setFieldAvailability("twoPairs", twoPairs(diceResults) > 0);
         setFieldAvailability("threeOfAKind", threeOfAKind(diceResults) > 0);
@@ -281,8 +277,8 @@ function endTurn() {
     fetch('/end-turn', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(gameState), // Send the current game state
+        body: JSON.stringify(gameState),
     }).then(() => {
-        window.location.href = '/game'; // Reload for the next player's turn
+        window.location.href = '/game';
     });
 }
