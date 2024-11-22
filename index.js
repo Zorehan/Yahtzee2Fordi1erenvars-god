@@ -154,7 +154,10 @@ app.get('/game', (req, res) => {
     if (!gameInProgress) {
         return res.redirect('/');
     }
+
+    // Get the current game state based on which player's turn it is
     const currentGameState = currentPlayer === 1 ? gameStates.player1 : gameStates.player2;
+
     res.render('game', {
         player: currentPlayer,
         gameState: currentGameState,
@@ -162,7 +165,9 @@ app.get('/game', (req, res) => {
 });
 
 app.post('/end-turn', (req, res) => {
-    const { gameState } = req.body;
+    const { gameState } = req.body; // Received game state from client
+
+    // Update the current player's game state
     if (currentPlayer === 1) {
         gameStates.player1 = { ...gameStates.player1, ...gameState };
         currentPlayer = 2;
@@ -170,6 +175,8 @@ app.post('/end-turn', (req, res) => {
         gameStates.player2 = { ...gameStates.player2, ...gameState };
         currentPlayer = 1;
     }
+
+    // Redirect to the game page for the next player
     res.redirect('/game');
 });
 
@@ -223,6 +230,6 @@ app.get('/api/game-state', (req, res) => {
     res.json(gameState);
 });
 
-app.listen(8443, '192.168.250.207', () => {
-    console.log('Server running on http://192.168.250.207:8443');
+app.listen(8443, '10.10.0.106', () => {
+    console.log('Server running on http://10.10.0.106:8443');
 });

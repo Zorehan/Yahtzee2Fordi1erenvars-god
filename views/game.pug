@@ -16,6 +16,7 @@ html(lang="en")
                 img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice3", value="1", onclick="selectDice(3)")
                 img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice4", value="1", onclick="selectDice(4)")
                 img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice5", value="1", onclick="selectDice(5)")
+
         #rollBar
             p Rolls left:
             p#rollsLeftText 3
@@ -27,33 +28,16 @@ html(lang="en")
                     tr
                         th Score
                 tbody
-                    tr
-                        td 1-ere:
-                        td
-                            input(type="number", id="aces", disabled)
-                    tr
-                        td 2-ere:
-                        td
-                            input(type="number", id="twos", disabled)
-                    tr
-                        td 3-ere:
-                        td
-                            input(type="number", id="threes", disabled)
-                    tr
-                        td 4-ere:
-                        td
-                            input(type="number", id="fours", disabled)
-                    tr
-                        td 5-ere:
-                        td
-                            input(type="number", id="fives", disabled)
-                    tr
-                        td 6-ere:
-                        td
-                            input(type="number", id="sixes", disabled)
+                    // Loop through each score category in gameState.scores
+                    each value, category in gameState.scores
+                        tr
+                            td #{category}
+                            td
+                                input(type="number", name="score", value=value, id=category, disabled)
+
                     tr.totalRow
                         td Samlet point øverst:
-                        td#upperTotal 0
+                        td#upperTotal= gameState.scores.aces + gameState.scores.twos + gameState.scores.threes + gameState.scores.fours + gameState.scores.fives + gameState.scores.sixes
                     tr
                         td Et Par
                         td
@@ -92,10 +76,10 @@ html(lang="en")
                             input(type="number", id="chance", disabled)
                     tr.totalRow
                         td Samlet point nederest:
-                        td#lowerTotal 0
+                        td#lowerTotal= gameState.scores.onePair + gameState.scores.twoPairs + gameState.scores.threeOfAKind + gameState.scores.fourOfAKind + gameState.scores.fullHouse + gameState.scores.smallStraight + gameState.scores.largeStraight + gameState.scores.yahtzee + gameState.scores.chance
                     tr.total
                         td Samlet score:
-                        td#totalScore 0
+                        td#totalScore= gameState.scores.aces + gameState.scores.twos + gameState.scores.threes + gameState.scores.fours + gameState.scores.fives + gameState.scores.sixes + gameState.scores.onePair + gameState.scores.twoPairs + gameState.scores.threeOfAKind + gameState.scores.fourOfAKind + gameState.scores.fullHouse + gameState.scores.smallStraight + gameState.scores.largeStraight + gameState.scores.yahtzee + gameState.scores.chance
 
         #skins
             button(id="Skin" onclick="onClickBlackDiceBtn()") BlackDice

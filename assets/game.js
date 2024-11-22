@@ -274,11 +274,41 @@ function updateTotals() {
 }
 
 function endTurn() {
+    const gameState = {
+        diceResults: diceResults,
+        diceHeld: diceHeld,
+        rollsLeft: rollsLeft,
+        diceSkin: diceSkin,
+        scores: {
+            aces: document.getElementById('aces').value,
+            twos: document.getElementById('twos').value,
+            threes: document.getElementById('threes').value,
+            fours: document.getElementById('fours').value,
+            fives: document.getElementById('fives').value,
+            sixes: document.getElementById('sixes').value,
+            onePair: document.getElementById('onePair').value,
+            twoPairs: document.getElementById('twoPairs').value,
+            threeOfAKind: document.getElementById('threeOfAKind').value,
+            fourOfAKind: document.getElementById('fourOfAKind').value,
+            fullHouse: document.getElementById('fullHouse').value,
+            smallStraight: document.getElementById('smallStraight').value,
+            largeStraight: document.getElementById('largeStraight').value,
+            yahtzee: document.getElementById('yahtzee').value,
+            chance: document.getElementById('chance').value,
+        }
+    };
+
     fetch('/end-turn', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(gameState),
-    }).then(() => {
-        window.location.href = '/game';
-    });
+        body: JSON.stringify({ gameState }) // Send the updated game state
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log('Turn ended successfully');
+                window.location.reload(); // Reload the game to show the next player's turn
+            } else {
+                console.error('Error ending turn');
+            }
+        });
 }
