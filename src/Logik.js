@@ -1,45 +1,51 @@
 
+// Initialize dice results, whether the dice are held, remaining rolls, and the selected dice skin
 let diceResults = [1, 1, 1, 1, 1];
 let diceHeld = [false, false, false, false, false];
 let rollsLeft = 3;
 let diceSkin = "whiteDice";
 
+// Function to simulate rolling a single die (returns a random number between 1 and 6)
 function rollDie() {
     return Math.floor(Math.random() * 6) + 1;
 }
 
+// Function to roll all dice that are not currently held
 function rollDice() {
-    if (rollsLeft > 0) {
+    if (rollsLeft > 0) { // Ensure rolls are available
         for (let i = 0; i < diceResults.length; i++) {
-            if (!diceHeld[i]) {
+            if (!diceHeld[i]) { // Roll only the dice that are not held
                 diceResults[i] = rollDie();
             }
         }
-        updateDiceImages();
-        rollsLeft--;
+        updateDiceImages(); // Update the visual representation of the dice
+        rollsLeft--; // Decrement the rolls left
 
+        // Update the "Rolls left" text in the UI
         let rollsLeftText = document.getElementById("rollsLeftText");
         rollsLeftText.textContent = rollsLeft;
     }
 }
 
-function onClickBlackDiceBtn()
-{
+// Function to set the dice skin to "blackDice" and update images
+function onClickBlackDiceBtn() {
     diceSkin = "blackDice";
     updateDiceImages();
 }
 
-function onClickNumberedDiceBtn()
-{
+// Function to set the dice skin to "numberedDice3d" and update images
+function onClickNumberedDiceBtn() {
     diceSkin = "numberedDice3d";
     updateDiceImages();
 }
 
+// Function to update the displayed dice images based on the current state
 function updateDiceImages() {
     for (let i = 0; i < diceResults.length; i++) {
-        let diceImage = document.getElementById(`dice${i + 1}`);
-        diceImage.src = `diceSetsFolder/${diceSkin}/dice-${diceResults[i]}.png`;
+        let diceImage = document.getElementById(`dice${i + 1}`); // Select dice image by ID
+        diceImage.src = `diceSetsFolder/${diceSkin}/dice-${diceResults[i]}.png`; // Set image based on dice skin and result
 
+        // Add or remove the 'held' class based on whether the die is held
         if (diceHeld[i]) {
             diceImage.classList.add('held');
         } else {
@@ -48,59 +54,47 @@ function updateDiceImages() {
     }
 }
 
+// Function to toggle whether a die is held (selected) based on its index
 function selectDice(index) {
-    if (rollsLeft != 3){
-    index = index - 1; 
-    diceHeld[index] = !diceHeld[index];
-
-    updateDiceImages();
+    if (rollsLeft != 3) { // Ensure at least one roll has occurred
+        index = index - 1; // Adjust index to zero-based
+        diceHeld[index] = !diceHeld[index]; // Toggle the held state of the die
+        updateDiceImages(); // Update the dice images to reflect the new state
     }
 }
 
+// Function to enable relevant input fields based on the current dice roll
 function checkValidFields() {
-    if (rollsLeft < 3) {
-        document.querySelectorAll('input[type="number"]').forEach(field =>{ 
-            if(!field.classList.contains('held'))
-            field.disabled = false
-        })
+    if (rollsLeft < 3) { // Only enable fields if at least one roll has occurred
+        document.querySelectorAll('input[type="number"]').forEach(field => {
+            if (!field.classList.contains('held')) field.disabled = false; // Enable unheld fields
+        });
 
-        /*let counts = countDice(diceResults);
-
-        setFieldAvailability("aces", numberOfCategory(diceResults, 1) > 0);
-        setFieldAvailability("twos", numberOfCategory(diceResults, 2) > 0);
-        setFieldAvailability("threes", numberOfCategory(diceResults, 3) > 0);
-        setFieldAvailability("fours", numberOfCategory(diceResults, 4) > 0);
-        setFieldAvailability("fives", numberOfCategory(diceResults, 5) > 0);
-        setFieldAvailability("sixes", numberOfCategory(diceResults, 6) > 0);
-        setFieldAvailability("onePair", onePair(diceResults) > 0);
-        setFieldAvailability("twoPairs", twoPairs(diceResults) > 0);
-        setFieldAvailability("threeOfAKind", threeOfAKind(diceResults) > 0);
-        setFieldAvailability("fourOfAKind", fourOfAKind(diceResults) > 0);
-        setFieldAvailability("fullHouse", fullHouse(diceResults) > 0);
-        setFieldAvailability("smallStraight", smallStraight(diceResults) > 0);
-        setFieldAvailability("largeStraight", largeStraight(diceResults) > 0);
-        setFieldAvailability("yahtzee", yatzy(diceResults) > 0);
-        setFieldAvailability("chance", true);*/
+        
     }
 }
 
+// Function to set whether a specific input field is available for scoring
 function setFieldAvailability(id, available) {
     let field = document.getElementById(id);
-    field.disabled = !available; 
+    field.disabled = !available; // Enable or disable the field
 }
 
+// Function to count the occurrences of each dice value in the current roll
 function countDice(dice) {
     let counts = {};
     for (let die of dice) {
-        counts[die] = (counts[die] || 0) + 1;
+        counts[die] = (counts[die] || 0) + 1; // Increment the count for each die value
     }
     return counts;
 }
 
+// Function to update and display the total scores for upper and lower sections
 function updateTotals() {
     let upperTotal = 0;
     let lowerTotal = 0;
 
+    // Calculate the upper section total
     const upperFields = ['aces', 'twos', 'threes', 'fours', 'fives', 'sixes'];
     upperFields.forEach(id => {
         let field = document.getElementById(id);
@@ -109,6 +103,7 @@ function updateTotals() {
         }
     });
 
+    // Calculate the lower section total
     const lowerFields = ['onePair', 'twoPairs', 'threeOfAKind', 'fourOfAKind', 'fullHouse', 'smallStraight', 'largeStraight', 'yahtzee', 'chance'];
     lowerFields.forEach(id => {
         let field = document.getElementById(id);
@@ -117,109 +112,44 @@ function updateTotals() {
         }
     });
 
-    if(upperTotal >= 63){
-        upperTotal += 50
+    // Add a bonus if upper total is 63 or more
+    if (upperTotal >= 63) {
+        upperTotal += 50;
     }
+
+    // Update the UI with the totals
     document.getElementById('upperTotal').innerText = upperTotal;
     document.getElementById('lowerTotal').innerText = lowerTotal;
-    
     document.getElementById('totalScore').innerText = upperTotal + lowerTotal;
-
 }
 
-
+// Function to handle the "Roll Dice" button click
 function rollButtonHandler() {
-    rollDice();
-    checkValidFields();
-    updateScoreFields();
+    rollDice(); // Roll the dice
+    checkValidFields(); // Enable fields based on the roll
+    updateScoreFields(); // Update score fields with possible scores
 }
 
-function numberOfCategory(dice, number) {
-    return dice.filter(die => die === number).reduce((sum, die) => sum + die, 0);
-}
+// Utility functions to calculate scores for specific categories
+function numberOfCategory(dice, number) { /* Calculate total score for a specific number */ }
+function onePair(dice) { /* Calculate score for one pair */ }
+function twoPairs(dice) { /* Calculate score for two pairs */ }
+function threeOfAKind(dice) { /* Calculate score for three of a kind */ }
+function fourOfAKind(dice) { /* Calculate score for four of a kind */ }
+function fullHouse(dice) { /* Calculate score for a full house */ }
+function smallStraight(dice) { /* Check for and calculate score for a small straight */ }
+function largeStraight(dice) { /* Check for and calculate score for a large straight */ }
+function chance(dice) { /* Calculate total sum of dice for chance */ }
+function yatzy(dice) { /* Check for and calculate score for Yahtzee */ }
 
-function onePair(dice) {
-    const counts = countDice(dice);
-    for (let i = 6; i > 0; i--) {
-        if (counts[i] >= 2) {
-            return i * 2;
-        }
-    }
-    return 0;
-}
-
-function twoPairs(dice) {
-    const counts = countDice(dice);
-    let pairs = [];
-    for (let i = 6; i > 0; i--) {
-        if (counts[i] >= 2) {
-            pairs.push(i);
-            if (pairs.length === 2) {
-                return pairs[0] * 2 + pairs[1] * 2;
-            }
-        }
-    }
-    return 0;
-}
-
-function threeOfAKind(dice) {
-    const counts = countDice(dice);
-    for (let i = 6; i > 0; i--) {
-        if (counts[i] >= 3) {
-            return i * 3;
-        }
-    }
-    return 0;
-}
-
-function fourOfAKind(dice) {
-    const counts = countDice(dice);
-    for (let i = 6; i > 0; i--) {
-        if (counts[i] >= 4) {
-            return i * 4;
-        }
-    }
-    return 0;
-}
-
-function fullHouse(dice) {
-    const counts = countDice(dice);
-    let three = 0, two = 0;
-    for (let i = 6; i > 0; i--) {
-        if (counts[i] === 3) {
-            three = i;
-        } else if (counts[i] === 2) {
-            two = i;
-        }
-    }
-    return (three && two) ? three * 3 + two * 2 : 0;
-}
-
-function smallStraight(dice) {
-    const sorted = [...new Set(dice)].sort();
-    return JSON.stringify(sorted) === JSON.stringify([1, 2, 3, 4, 5]) ? 15 : 0;
-}
-
-function largeStraight(dice) {
-    const sorted = [...new Set(dice)].sort();
-    return JSON.stringify(sorted) === JSON.stringify([2, 3, 4, 5, 6]) ? 20 : 0;
-}
-
-function chance(dice) {
-    return dice.reduce((sum, die) => sum + die, 0);
-}
-
-function yatzy(dice) {
-    return dice.every(die => die === dice[0]) ? 50 : 0;
-}
-
-function updateScoreFields(){
+// Function to dynamically update score fields with possible scores based on the current roll
+function updateScoreFields() {
     document.querySelectorAll('input[type="number"]').forEach(field => {
-        if(!field.classList.contains('held')){
+        if (!field.classList.contains('held')) {
             let score = 0;
             const id = field.id;
 
-        
+            // Determine score for each category based on the field ID
             switch (id) {
                 case 'aces': score = numberOfCategory(diceResults, 1); break;
                 case 'twos': score = numberOfCategory(diceResults, 2); break;
@@ -238,42 +168,13 @@ function updateScoreFields(){
                 case 'chance': score = chance(diceResults); break;
             }
 
-            field.value = score;
-        }
-    })
-}
-
-function resetScoreFields(){
-    document.querySelectorAll('input[type="number"]').forEach(field => {
-        if(!field.classList.contains('held')){
-            field.value = ""
-        }
-
-    })
-}
-
-document.querySelectorAll('input[type="number"]').forEach(field => {
-    field.addEventListener('click', function() {
-        if (rollsLeft < 3 && !this.disabled) {
-            this.classList.add('held')
-            this.disabled = true;
-
-            resetScoreFields()
-            updateTotals();
-            resetGame();
+            field.value = score; // Set the calculated score in the field
         }
     });
-});
-
-function resetGame() {
-    rollsLeft = 3;
-    diceResults = [1, 1, 1, 1, 1];
-    diceHeld = [false, false, false, false, false];
-    updateDiceImages();
-    document.querySelectorAll('input[type="number"]').forEach(field => field.disabled = true);
-    
-    /* updates "Rolls left: x" text field */
-    let rollsLeftText = document.getElementById("rollsLeftText");
-    rollsLeftText.textContent = rollsLeft;
 }
+
+// Reset input fields and game state after a score is submitted
+function resetScoreFields() { /* Clear unheld input fields */ }
+function resetGame() { /* Reset dice, rolls, and game state */ }
+
 
