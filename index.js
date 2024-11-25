@@ -22,7 +22,7 @@ app.use(
 const loginsPath = path.join(__dirname, 'assets', 'playerLogins');
 let playerLogins = {};
 let lobbyUsers = [];
-
+//JSON TEMPLATE TIL VORES GAMESTATES
 let gameStates = {
     player1: {
         diceResults: [1, 1, 1, 1, 1],
@@ -71,7 +71,7 @@ let gameStates = {
         },
     },
 };
-
+//Metode der læser filen og gemmer de forskelige logins i en variable defineret øverst i koden
 fs.readFile(loginsPath, 'utf-8', (err, data) => {
     if (err) {
         console.error('Error reading playerLogins', err);
@@ -83,7 +83,7 @@ fs.readFile(loginsPath, 'utf-8', (err, data) => {
         }, {});
     }
 });
-
+//Vores root .get der redirecter til lobbyen hvis man er logget ind (allerede har en session)
 app.get('/', (request, response) => {
     if (request.session.user) {
         response.redirect('/gameWaitingScreen');
@@ -95,6 +95,7 @@ app.get('/', (request, response) => {
     }
 });
 
+//vores .post til loginsiden hvor det bliver tjekket om man er en bruger i systemet, hvis ja bliver man redirectet til gameWaitingScreen og ellers forbliver man på loginsiden og får en error
 app.post('/login', (request, response) => {
     const { username, password } = request.body;
 
@@ -115,6 +116,8 @@ app.post('/login', (request, response) => {
     }
 });
 
+
+//Logout pathen fjerner sessionen så man ikke længere counter som at være logget ind
 app.get('/logout', (request, response) => {
     if (request.session.user) {
         const username = request.session.user.username;
@@ -129,6 +132,8 @@ app.get('/logout', (request, response) => {
     });
 });
 
+
+//Gamewaiting screen er vores lobby som viser hvilke brugere der venter og er klar til et spil
 app.get('/gameWaitingScreen', (request, response) => {
     if (request.session.user) {
         response.render('gameWaitingScreen', {
@@ -144,18 +149,20 @@ app.get('/gameWaitingScreen', (request, response) => {
 let currentPlayer = 1;
 let gameInProgress = false;
 
+
 app.post('/start-game', (req, res) => {
     currentPlayer = 1;
     gameInProgress = true;
     res.redirect('/game');
 });
 
+//.get /game redirecter til vores lobbyskærm hvis knappen start-game ikke er blevet trykket endnu, ellers henter den gamestatesne, hvilken spiller der starter, og sender det afsted til game.pug
+// filen som så er vores yahtzee bræt
 app.get('/game', (req, res) => {
     if (!gameInProgress) {
         return res.redirect('/');
     }
 
-    // Get the current game state based on which player's turn it is
     const currentGameState = currentPlayer === 1 ? gameStates.player1 : gameStates.player2;
 
     res.render('game', {
@@ -164,10 +171,11 @@ app.get('/game', (req, res) => {
     });
 });
 
-app.post('/end-turn', (req, res) => {
-    const { gameState } = req.body; // Received game state from client
 
-    // Update the current player's game state
+//End turn er et endpoint som vi kalder efter når en tur er færdig, den tager den currentplayer værdien og flipper den og sætter en ny /game i gang hvor det så er den nye spillers tur
+app.post('/end-turn', (req, res) => {
+    const { gameState } = req.body;
+
     if (currentPlayer === 1) {
         gameStates.player1 = { ...gameStates.player1, ...gameState };
         currentPlayer = 2;
@@ -176,60 +184,30 @@ app.post('/end-turn', (req, res) => {
         currentPlayer = 1;
     }
 
-    // Redirect to the game page for the next player
+
     res.redirect('/game');
 });
 
-app.post('/api/roll', (req, res) => {
-    if (gameState.rollsLeft > 0) {
-        for (let i = 0; i < gameState.diceResults.length; i++) {
-            if (!gameState.diceHeld[i]) {
-                gameState.diceResults[i] = Math.floor(Math.random() * 6) + 1;
-            }
-        }
-        gameState.rollsLeft--;
-        res.json(gameState);
-    } else {
-        res.status(400).json({ message: 'No rolls left' });
-    }
-});
-
-app.post('/api/select-dice', (req, res) => {
-    const { index } = req.body;
-    if (index >= 1 && index <= 5) {
-        gameState.diceHeld[index - 1] = !gameState.diceHeld[index - 1];
-        res.json(gameState);
-    } else {
-        res.status(400).json({ message: 'Invalid dice index' });
-    }
-});
-
-app.post('/api/change-skin', (req, res) => {
-    const { skin } = req.body;
-    if (skin === 'blackDice' || skin === 'numberedDice3d' || skin === 'whiteDice') {
-        gameState.diceSkin = skin;
-        res.json(gameState);
-    } else {
-        res.status(400).json({ message: 'Invalid dice skin' });
-    }
-});
-
+//Denne her endpoint bliver brugt til at gemme/opdatere gamestaten det sker ved at vi tager fat i det gamestate som der tilhører den spiller som i øjeblikket er ved at tage turen
+//og opdatere de forskellige værdier
 app.post('/api/update-score', (req, res) => {
     const { category, score } = req.body;
     const currentGameState = currentPlayer === 1 ? gameStates.player1 : gameStates.player2;
 
     if (currentGameState.scores.hasOwnProperty(category)) {
-        currentGameState.scores[category] = score; // Update score
+        currentGameState.scores[category] = score;
         res.json({ success: true, gameState: currentGameState });
     } else {
         res.status(400).json({ success: false, message: 'Invalid score category' });
     }
 });
 
+
+//En meget simpel endpoint der bare returner gamestaten til klientsiden
 app.get('/api/game-state', (req, res) => {
     res.json(gameState);
 });
 
-app.listen(8443, '10.10.0.106', () => {
-    console.log('Server running on http://10.10.0.106:8443');
+app.listen(8443, 'localhost', () => {
+    console.log('Server running on http://localhost:8443');
 });
