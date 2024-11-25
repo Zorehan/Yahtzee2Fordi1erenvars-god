@@ -5,7 +5,6 @@ const createAccount = document.querySelector('#createAccount')
 createAccount.onclick = async () => {
     try {
         const content = await getInput('/createAccount') //web URL
-
         await CreateUser("/assets/saveFiles/accounts/users.json", content);
         window.location.href = "/menu";
     } catch (e) {
