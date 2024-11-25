@@ -1,11 +1,11 @@
-{
-    "user":{
+[
+    {
         "userName": "userName", 
         "password": "password"
     },
-    "user":{
+    {
         "userName": "userName", 
         "password": "password"
     }
     
-}
+]
