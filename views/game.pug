@@ -1,0 +1,90 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        title Yahtzee Game
+        link(rel="stylesheet", href="style/layout.css")
+        script(src="game.js", defer)
+    body
+        h1 Yahtzee Game
+        p Player #{player}'s turn
+
+        #diceBox
+            #diceImages
+                img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice1", value="1", onclick="selectDice(1)")
+                img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice2", value="1", onclick="selectDice(2)")
+                img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice3", value="1", onclick="selectDice(3)")
+                img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice4", value="1", onclick="selectDice(4)")
+                img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice5", value="1", onclick="selectDice(5)")
+
+        #rollBar
+            p Rolls left:
+            p#rollsLeftText 3
+            button(onclick="rollDice()") Roll
+
+        #scoreBox
+            table
+                thead
+                    tr
+                        th Score
+                tbody
+                    // Loop through each score category in gameState.scores
+                    each value, category in gameState.scores
+                        tr
+                            td #{category}
+                            td
+                                input(type="number", name="score", value=value, id=category, disabled)
+
+                    tr.totalRow
+                        td Samlet point øverst:
+                        td#upperTotal= gameState.scores.aces + gameState.scores.twos + gameState.scores.threes + gameState.scores.fours + gameState.scores.fives + gameState.scores.sixes
+                    tr
+                        td Et Par
+                        td
+                            input(type="number", id="onePair", disabled)
+                    tr
+                        td To Par
+                        td
+                            input(type="number", id="twoPairs", disabled)
+                    tr
+                        td Tre ens:
+                        td
+                            input(type="number", id="threeOfAKind", disabled)
+                    tr
+                        td Fire ens:
+                        td
+                            input(type="number", id="fourOfAKind", disabled)
+                    tr
+                        td Fuld hus:
+                        td
+                            input(type="number", id="fullHouse", disabled)
+                    tr
+                        td Lille straight:
+                        td
+                            input(type="number", id="smallStraight", disabled)
+                    tr
+                        td Stor straight:
+                        td
+                            input(type="number", id="largeStraight", disabled)
+                    tr
+                        td Yahtzee:
+                        td
+                            input(type="number", id="yahtzee", disabled)
+                    tr
+                        td Chance:
+                        td
+                            input(type="number", id="chance", disabled)
+                    tr.totalRow
+                        td Samlet point nederest:
+                        td#lowerTotal= gameState.scores.onePair + gameState.scores.twoPairs + gameState.scores.threeOfAKind + gameState.scores.fourOfAKind + gameState.scores.fullHouse + gameState.scores.smallStraight + gameState.scores.largeStraight + gameState.scores.yahtzee + gameState.scores.chance
+                    tr.total
+                        td Samlet score:
+                        td#totalScore= gameState.scores.aces + gameState.scores.twos + gameState.scores.threes + gameState.scores.fours + gameState.scores.fives + gameState.scores.sixes + gameState.scores.onePair + gameState.scores.twoPairs + gameState.scores.threeOfAKind + gameState.scores.fourOfAKind + gameState.scores.fullHouse + gameState.scores.smallStraight + gameState.scores.largeStraight + gameState.scores.yahtzee + gameState.scores.chance
+
+        #skins
+            button(id="Skin" onclick="onClickBlackDiceBtn()") BlackDice
+            button(id="Skin" onclick="onClickNumberedDiceBtn()") Numbered Dice 3D
+
+        #turnEndButton
+            form(action="/end-turn", method="POST")
+                button(type="submit") End Turn
