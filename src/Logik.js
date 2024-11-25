@@ -70,7 +70,7 @@ function checkValidFields() {
             if (!field.classList.contains('held')) field.disabled = false; // Enable unheld fields
         });
 
-        // Future logic for dynamically enabling fields could be added here
+        
     }
 }
 
