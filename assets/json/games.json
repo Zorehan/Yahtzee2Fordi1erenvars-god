@@ -29,6 +29,26 @@
                     "yahtzee": false,
                     "chance": false
                 }
+            },
+            {
+                "Player": "navn",
+                "scores": {
+                    "aces": false,
+                    "twos": 8,
+                    "threes": false,
+                    "fours": false,
+                    "fives": false,
+                    "sixes": 18,
+                    "onePair": false,
+                    "twoPairs": false,
+                    "threeOfAKind": false,
+                    "fourOfAKind": false,
+                    "fullHouse": 22,
+                    "smallStraight": false,
+                    "largeStraight": false,
+                    "yahtzee": false,
+                    "chance": false
+                }
             }
         ]
     }

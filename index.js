@@ -19,118 +19,116 @@ app.use(
     })
 );
 
-const loginsPath = path.join(__dirname, 'assets', 'playerLogins');
+//const loginsPath = path.join(__dirname, 'assets', 'playerLogins');
+const loginsPath = 'assets/json/users.json';
 let playerLogins = {};
-let lobbyUsers = [];
-//JSON TEMPLATE TIL VORES GAMESTATES
-let gameStates = {
-    player1: {
-        diceResults: [1, 1, 1, 1, 1],
-        diceHeld: [false, false, false, false, false],
-        rollsLeft: 3,
-        diceSkin: 'whiteDice',
-        scores: {
-            aces: 0,
-            twos: 0,
-            threes: 0,
-            fours: 0,
-            fives: 0,
-            sixes: 0,
-            onePair: 0,
-            twoPairs: 0,
-            threeOfAKind: 0,
-            fourOfAKind: 0,
-            fullHouse: 0,
-            smallStraight: 0,
-            largeStraight: 0,
-            yahtzee: 0,
-            chance: 0,
-        },
-    },
-    player2: {
-        diceResults: [1, 1, 1, 1, 1],
-        diceHeld: [false, false, false, false, false],
-        rollsLeft: 3,
-        diceSkin: 'whiteDice',
-        scores: {
-            aces: 0,
-            twos: 0,
-            threes: 0,
-            fours: 0,
-            fives: 0,
-            sixes: 0,
-            onePair: 0,
-            twoPairs: 0,
-            threeOfAKind: 0,
-            fourOfAKind: 0,
-            fullHouse: 0,
-            smallStraight: 0,
-            largeStraight: 0,
-            yahtzee: 0,
-            chance: 0,
-        },
-    },
-};
 //Metode der læser filen og gemmer de forskelige logins i en variable defineret øverst i koden
 fs.readFile(loginsPath, 'utf-8', (err, data) => {
     if (err) {
         console.error('Error reading playerLogins', err);
     } else {
-        playerLogins = data.split('\n').reduce((acc, line) => {
-            const [username, password] = line.split(':');
-            if (username && password) acc[username.trim()] = password.trim();
-            return acc;
-        }, {});
+        playerLogins = JSON.parse(data)
     }
 });
+
 //Vores root .get der redirecter til lobbyen hvis man er logget ind (allerede har en session)
 app.get('/', (request, response) => {
-    if (request.session.user) {
-        response.redirect('/gameWaitingScreen');
-    } else {
-        response.render('login', {
-            pageName: 'Login Site',
-            introduction: 'Please login',
-        });
+    let hasUser = false
+    if(request.session.user){
+        hasUser = true;
     }
+    response.render('menu', { loggedIn: hasUser });
+});
+
+app.get('/menu/login', (request, response) => {
+    if(request.session.user){
+        response.redirect('/');
+    }
+    response.render('login')
 });
 
 //vores .post til loginsiden hvor det bliver tjekket om man er en bruger i systemet, hvis ja bliver man redirectet til gameWaitingScreen og ellers forbliver man på loginsiden og får en error
 app.post('/login', (request, response) => {
     const { username, password } = request.body;
 
-    if (playerLogins[username] && playerLogins[username] === password) {
-        request.session.user = { username };
-
-        if (!lobbyUsers.includes(username)) {
-            lobbyUsers.push(username);
+    playerLogins.forEach(acc => {
+        if(acc.username === username){
+            if (acc.password === password){
+                request.session.user = { username };
+                response.redirect('/menu', { loggedIn: hasUser });
+            } else {
+                response.render('login', {
+                    pageName: 'Login Site',
+                    introduction: 'Please login',
+                    error: 'Invalid username or password',
+                });
+            }
         }
+    });
+});
 
-        response.redirect('/gameWaitingScreen');
+//MENU Logged in buttons
+app.get('/menu/join', async (request, response) => {
+    if (request.session.user) {
+        const games = await getGames();
+        response.render('join', {
+            pageName: 'Join Game',
+            games: games,
+        });
     } else {
-        response.render('login', {
-            pageName: 'Login Site',
+        response.redirect('/menu');
+    }
+});
+
+app.get('/menu/host', async (request, response) => {
+    if (request.session.user) {
+        const yourGames = await getGames();
+        response.render('host', {
+            pageName: 'Host Game',
+            yourGames: yourGames
+        });
+    } else {
+        response.redirect('/menu');
+    }
+});
+
+app.post('/createGame', async (request, response) => {
+    const {gameID, password, playerLimit} = request.body;
+    if (gameID != '' && playerLimit > 0) {
+        games.
+        window.location.reload();
+    } else {
+        response.render('host', {
+            pageName: 'Host Game',
             introduction: 'Please login',
             error: 'Invalid username or password',
         });
     }
 });
 
+app.get('/menu/settings', (request, response) => {
+    if (request.session.user) {
+        response.render('settings', {
+            pageName: 'Settings',
+            user: request.session.user,
+        });
+    } else {
+        response.redirect('/menu');
+    }
+});
 
 //Logout pathen fjerner sessionen så man ikke længere counter som at være logget ind
 app.get('/logout', (request, response) => {
-    if (request.session.user) {
-        const username = request.session.user.username;
-        lobbyUsers = lobbyUsers.filter((user) => user !== username);
-    }
-
     request.session.destroy((err) => {
         if (err) {
             console.error('Error during logout:', err);
         }
-        response.redirect('/');
+        response.redirect('/menu');
     });
 });
+
+
+// OLD CODE
 
 
 //Gamewaiting screen er vores lobby som viser hvilke brugere der venter og er klar til et spil

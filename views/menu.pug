@@ -3,8 +3,8 @@ html
     head
         title= pageName
     body
-        h1 Yahtzy
-        if registeredUser
+        h1= pageName
+        if loggedIn
             include includes/menu/userMenu
         else
             include includes/menu/unregisteredMenu

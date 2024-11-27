@@ -1,0 +1,18 @@
+html
+    head
+        title= pageName
+    body
+        h1= pageName
+        form(action="/createGame", method="POST")
+            label GAME ID: 
+            input(type="text", name="gameID")
+            label PASSWORD:
+            input(type="text", name="password")
+            label PLAYER LIMIT:
+            input(type="text", name="playerLimit")
+            button(type="submit") CREATE GAME
+        div(id="yourGames", class="host")
+            h2 YOUR GAMES
+            each game in yourGames
+                li 
+                    a(href="/menu/host/" + game.properties.name) #{game.properties.name} | #{game.properties.host} | #{game.properties.players}/#{game.properties.maxPlayers}

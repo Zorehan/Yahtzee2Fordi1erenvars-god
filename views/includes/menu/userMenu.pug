@@ -1,4 +1,12 @@
-button(type="button") JOIN
-button(type="button") HOST
-button(type="button") SETTINGS
-button(type="button") LOGOUT
+form(action="/menu/join", method="GET")
+    button(type="submit") JOIN
+
+form(action="/menu/host", method="GET")
+    button(type="submit") HOST
+
+form(action="/menu/settings", method="GET")
+    button(type="submit") SETTINGS
+
+form(action="/logout", method="POST")
+    button(type="submit") LOGOUT
+
