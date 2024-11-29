@@ -3,10 +3,30 @@
         "game": "gameName",
         "host": "hostName",
         "playerTurn": "playerName",
-        "dice":{
+        "diceTray":{
             "diceSkin": "whiteDice",
-            "Results": [ 1, 1, 1, 1, 1],
-            "Held": [false, false, false, false, false],
+            "dice": {
+                "die1":{
+                    "value": 1,
+                    "held": false
+                },
+                "die2":{
+                    "value": 1,
+                    "held": false
+                },
+                "die3":{
+                    "value": 1,
+                    "held": false
+                },
+                "die4":{
+                    "value": 1,
+                    "held": false
+                },
+                "die5":{
+                    "value": 1,
+                    "held": false
+                }
+            },
             "rollsLeft": 3
         },
         "players":[ 

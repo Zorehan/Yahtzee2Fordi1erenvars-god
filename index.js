@@ -84,6 +84,9 @@ app.get('/menu/join', async (request, response) => {
     }
 });
 
+
+// bruger gameWaitingScreen 
+// mangler at opdatere json filer
 app.get('/menu/host', async (request, response) => {
     if (request.session.user) {
         const yourGames = await getGames();
