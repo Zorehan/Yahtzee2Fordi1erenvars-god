@@ -1,0 +1,13 @@
+html
+    head
+        title= pageName
+    body
+        h1= pageName
+        div(id="openGames", class="join")
+            each game in openGames  
+                li 
+                    a(href="/menu/join/" + game.properties.name) #{game.properties.name} | #{game.properties.host} | #{game.properties.players}/#{game.properties.maxPlayers}
+        div(id="currentGames", class="join")
+            each game in currentGames
+                li 
+                    a(href="/menu/join/" + game.properties.name) #{game.properties.name} | #{game.properties.host} | #{game.properties.players}/#{game.properties.maxPlayers}

@@ -1,6 +1,0 @@
-
-
-const User = {
-    userName: req.userName,
-    password: req.password,
-};
