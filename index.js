@@ -31,8 +31,12 @@ fs.readFile(loginsPath, 'utf-8', (err, data) => {
     }
 });
 
-//Vores root .get der redirecter til lobbyen hvis man er logget ind (allerede har en session)
 app.get('/', (request, response) => {
+    response.redirect('/menu');
+});
+
+//Vores root .get der redirecter til lobbyen hvis man er logget ind (allerede har en session)
+app.get('/menu', (request, response) => {
     let hasUser = false
     if(request.session.user){
         hasUser = true;
@@ -42,7 +46,7 @@ app.get('/', (request, response) => {
 
 app.get('/menu/login', (request, response) => {
     if(request.session.user){
-        response.redirect('/');
+        response.redirect('/menu',{ loggedIn: true });
     }
     response.render('login')
 });
@@ -55,7 +59,7 @@ app.post('/login', (request, response) => {
         if(acc.username === username){
             if (acc.password === password){
                 request.session.user = { username };
-                response.redirect('/menu', { loggedIn: hasUser });
+                response.redirect('/menu');
             } else {
                 response.render('login', {
                     pageName: 'Login Site',
@@ -67,10 +71,10 @@ app.post('/login', (request, response) => {
     });
 });
 
-//MENU Logged in buttons
+//
 app.get('/menu/join', async (request, response) => {
     if (request.session.user) {
-        const games = await getGames();
+        const games = await getGames(request);
         response.render('join', {
             pageName: 'Join Game',
             games: games,
