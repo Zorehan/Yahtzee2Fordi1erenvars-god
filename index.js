@@ -61,11 +61,7 @@ app.post('/login', (request, response) => {
                 request.session.user = { username };
                 response.redirect('/menu');
             } else {
-                response.render('login', {
-                    pageName: 'Login Site',
-                    introduction: 'Please login',
-                    error: 'Invalid username or password',
-                });
+                response.redirect('/menu/login');
             }
         }
     });
@@ -84,6 +80,9 @@ app.get('/menu/join', async (request, response) => {
     }
 });
 
+
+// bruger gameWaitingScreen 
+// mangler at opdatere json filer
 app.get('/menu/host', async (request, response) => {
     if (request.session.user) {
         const yourGames = await getGames();
@@ -131,6 +130,45 @@ app.get('/logout', (request, response) => {
     });
 });
 
+
+app.get('/menu/createAccount', async (request, response) => {
+    if (!request.session.user) {
+        response.render('createAccount');
+    } else {
+        response.redirect('/menu');
+    }
+});
+app.post('/createAccount', async (request, response) => {
+    const { username, password } = request.body;
+
+    let isUsed = false
+    playerLogins.forEach(acc => {
+        if(acc.username === username || acc.password === password){
+            isUsed = true
+        }
+    });
+
+    if(!isUsed){
+        const acc = {
+            "username": username, 
+            "password": password 
+        }
+        makeAcc(acc)
+        request.session.user = { username };
+        response.redirect('/menu');
+    }else{
+        response.redirect('/menu/createAccount');
+    }
+});
+
+function makeAcc(newAcc) {
+    return new Promise((resolve, reject) => {
+        fs.writeFile(loginsPath, JSON.stringify(newAcc, null, 2), (err) => {
+            if (err) reject(err);
+            else resolve();
+        });
+    });
+}
 
 // OLD CODE
 
