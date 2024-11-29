@@ -13,7 +13,7 @@
             {
                 "Player": "navn",
                 "scores": {
-                    "aces": false,
+                    "aces": -1,
                     "twos": 8,
                     "threes": false,
                     "fours": false,
