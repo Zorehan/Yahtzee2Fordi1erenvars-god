@@ -23,16 +23,13 @@ app.use(
 const loginsPath = 'assets/json/users.json';
 let playerLogins = [];
 
-async function loadPlayerLogins() {
-    try {
-        const data = await fs.promises.readFile(loginsPath, 'utf-8');
-        playerLogins = JSON.parse(data);
-        if (!Array.isArray(playerLogins)) {
-            throw new Error('playerLogins must be an array');
-        }
-    } catch (err) {
-        console.error('Error loading playerLogins:', err);
-        playerLogins = []; // Default to an empty array on error
+//Metode der læser filen og gemmer de forskelige logins i en variable defineret øverst i koden
+fs.readFile(loginsPath, 'utf-8', (err, data) => {
+    if (err) {
+        console.error('Error reading playerLogins', err);
+    } else {
+        playerLogins = (JSON.parse(data));
+        console.log(playerLogins);
     }
 }
 
@@ -169,17 +166,50 @@ app.post('/menu/join', async (request, response) => {
 app.post('/menu/host', async (request, response) => {
     const { gameID, password, playerLimit } = request.body;
 
-    if (!gameID || playerLimit <= 0) {
-        return response.status(400).send('Invalid game ID or player limit.');
+    if(!isUsed){
+        const acc = {
+            username: username, 
+            password: password 
+        }
+        const err = await makeAcc(acc);
+        if (err){
+            response.redirect('/menu/createAccount');
+        } else {
+            request.session.user = { username };
+            response.redirect('/menu');
+        }
+    }else{
+        response.redirect('/menu/createAccount');
+
     }
 
-    try {
-        const games = await readGames();
-
-        // Check if the game already exists
-        if (games.some((game) => game.game === gameID)) {
-            return response.status(400).send('Game ID already exists.');
+async function makeAcc(newAcc) {
+    await playerLogins.push(newAcc)
+    await fs.writeFile(loginsPath, JSON.stringify(playerLogins, null, 2), (err) => {
+        if (err) {
+            console.error('Error creating account failed', err);
+            return err;
+        } else {
+            console.log(playerLogins)
         }
+    });
+}
+
+function getAcc(newAcc) {
+    return new Promise((resolve, reject) => {
+        playerLogins.add(newAcc)
+        fs.writeFile(loginsPath, JSON.stringify(playerLogins, null, 2), (err) => {
+            if (err) {
+                console.error('Error reading playerLogins', err);
+            } else {
+                console.log(playerLogins)
+            }
+        });
+    });
+}
+
+
+// OLD COD
 
         // Create a new game and include the host player
         const newGame = {
