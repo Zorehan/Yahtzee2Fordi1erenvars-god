@@ -36,10 +36,7 @@ async function loadPlayerLogins() {
     }
 }
 
-
-
 loadPlayerLogins();
-
 
 function readGames() {
     return new Promise((resolve, reject) => {
@@ -74,7 +71,7 @@ app.get('/', (request, response) => {
 
 //Vores root .get der redirecter til lobbyen hvis man er logget ind (allerede har en session)
 app.get('/menu', (request, response) => {
-    let hasUser = false
+    let hasUser = false;
     if(request.session.user){
         hasUser = true;
     }
@@ -85,7 +82,7 @@ app.get('/menu/login', (request, response) => {
     if(request.session.user){
         response.redirect('/menu',{ loggedIn: true });
     }
-    response.render('login')
+    response.render('login');
 });
 
 //vores .post til loginsiden hvor det bliver tjekket om man er en bruger i systemet, hvis ja bliver man redirectet til gameWaitingScreen og ellers forbliver man på loginsiden og får en error
@@ -123,7 +120,7 @@ app.get('/menu/join', async (req, res) => {
     }
 });
 
-//
+// Add player to a game
 app.post('/menu/join', async (request, response) => {
     const { gameID } = request.body;
 
@@ -168,6 +165,7 @@ app.post('/menu/join', async (request, response) => {
     }
 });
 
+// Hosting a new game
 app.post('/menu/host', async (request, response) => {
     const { gameID, password, playerLimit } = request.body;
 
@@ -246,6 +244,7 @@ app.get('/menu/host', (request, response) => {
     }
 });
 
+// Serve the game page with turn-based logic
 app.get('/game/:gameId', async (req, res) => {
     const gameId = req.params.gameId;
     console.log('Session:', req.session);  // Debugging: check session data
@@ -270,91 +269,20 @@ app.get('/game/:gameId', async (req, res) => {
             return res.status(404).send('Player not found'); // If the player doesn't exist in the game
         }
 
-        // Render the game page, passing the game details and current player's data
-        res.render('game', { game, player });
+        // Check if the player is a spectator (not the current turn)
+        const isSpectator = game.playerTurn !== username;
+
+        if (isSpectator) {
+            return res.render('game', { game, spectator: true });
+        } else {
+            return res.render('game', { game, spectator: false });
+        }
     } catch (error) {
         console.error('Error fetching game:', error);
-        res.status(500).send('Server error');
+        res.status(500).send('Error loading game');
     }
 });
 
-app.post('/createGame', async (request, response) => {
-    const {gameID, password, playerLimit} = request.body;
-    if (gameID != '' && playerLimit > 0) {
-        games.
-        window.location.reload();
-    } else {
-        response.render('host', {
-            pageName: 'Host Game',
-            introduction: 'Please login',
-            error: 'Invalid username or password',
-        });
-    }
-});
-
-app.get('/menu/settings', (request, response) => {
-    if (request.session.user) {
-        response.render('settings', {
-            pageName: 'Settings',
-            user: request.session.user,
-        });
-    } else {
-        response.redirect('/menu');
-    }
-});
-
-//Logout pathen fjerner sessionen så man ikke længere counter som at være logget ind
-app.get('/logout', (request, response) => {
-    request.session.destroy((err) => {
-        if (err) {
-            console.error('Error during logout:', err);
-        }
-        response.redirect('/menu');
-    });
-});
-
-
-
-app.get('/menu/createAccount', async (request, response) => {
-    if (!request.session.user) {
-        response.render('createAccount');
-    } else {
-        response.redirect('/menu');
-    }
-});
-app.post('/createAccount', async (request, response) => {
-    const { username, password } = request.body;
-
-    let isUsed = false
-    playerLogins.forEach(acc => {
-        if(acc.username === username || acc.password === password){
-            isUsed = true
-        }
-    });
-
-    if(!isUsed){
-        const acc = {
-            "username": username,
-            "password": password
-        }
-        makeAcc(acc)
-        request.session.user = { username };
-        response.redirect('/menu');
-    }else{
-        response.redirect('/menu/createAccount');
-    }
-});
-
-function makeAcc(newAcc) {
-    return new Promise((resolve, reject) => {
-        fs.writeFile(loginsPath, JSON.stringify(newAcc, null, 2), (err) => {
-            if (err) reject(err);
-            else resolve();
-        });
-    });
-}
-
-
-app.listen(8443, 'localhost', () => {
-    console.log('Server running on http://localhost:8443');
+app.listen(3000, () => {
+    console.log('Server started on http://localhost:3000');
 });
