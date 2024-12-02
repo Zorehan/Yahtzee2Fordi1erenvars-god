@@ -186,5 +186,51 @@
       "rollsLeft": 3
     },
     "players": []
+  },
+  {
+    "game": "storhaha",
+    "host": "gær",
+    "playerTurn": "gær",
+    "maxPlayers": "3",
+    "dice": {
+      "diceSkin": "whiteDice",
+      "Results": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "Held": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "rollsLeft": 3
+    },
+    "players": [
+      {
+        "Player": "gær",
+        "scores": {
+          "aces": false,
+          "twos": false,
+          "threes": false,
+          "fours": false,
+          "fives": false,
+          "sixes": false,
+          "onePair": false,
+          "twoPairs": false,
+          "threeOfAKind": false,
+          "fourOfAKind": false,
+          "fullHouse": false,
+          "smallStraight": false,
+          "largeStraight": false,
+          "yahtzee": false,
+          "chance": false
+        }
+      }
+    ]
   }
 ]

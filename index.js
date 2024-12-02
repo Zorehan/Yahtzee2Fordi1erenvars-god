@@ -152,10 +152,7 @@ app.post('/menu/join', async (request, response) => {
                     chance: false,
                 },
             });
-            await writeGames(games);
         }
-
-        response.redirect('/gameWaitingScreen');
     } catch (error) {
         console.error('Error updating games.json:', error);
         response.status(500).send('Server error');
@@ -177,11 +174,11 @@ app.post('/menu/host', async (request, response) => {
             return response.status(400).send('Game ID already exists.');
         }
 
-        // Create a new game with an empty players array
+        // Create a new game and include the host player
         const newGame = {
             game: gameID,
             host: request.session.user.username,
-            playerTurn: null,
+            playerTurn: request.session.user.username, // Set the host as the starting player
             maxPlayers: playerLimit,
             dice: {
                 diceSkin: "whiteDice",
@@ -189,7 +186,28 @@ app.post('/menu/host', async (request, response) => {
                 Held: [false, false, false, false, false],
                 rollsLeft: 3,
             },
-            players: [],  // Start with an empty players array
+            players: [
+                {
+                    Player: request.session.user.username,
+                    scores: {
+                        aces: false,
+                        twos: false,
+                        threes: false,
+                        fours: false,
+                        fives: false,
+                        sixes: false,
+                        onePair: false,
+                        twoPairs: false,
+                        threeOfAKind: false,
+                        fourOfAKind: false,
+                        fullHouse: false,
+                        smallStraight: false,
+                        largeStraight: false,
+                        yahtzee: false,
+                        chance: false,
+                    },
+                },
+            ], // Add the host player to the players array
         };
 
         games.push(newGame);
@@ -313,57 +331,6 @@ app.post('/start-game', (req, res) => {
     res.redirect('/game');
 });
 
-//.get /game redirecter til vores lobbyskærm hvis knappen start-game ikke er blevet trykket endnu, ellers henter den gamestatesne, hvilken spiller der starter, og sender det afsted til game.pug
-// filen som så er vores yahtzee bræt
-app.get('/game', (req, res) => {
-    if (!gameInProgress) {
-        return res.redirect('/');
-    }
-
-    const currentGameState = currentPlayer === 1 ? gameStates.player1 : gameStates.player2;
-
-    res.render('game', {
-        player: currentPlayer,
-        gameState: currentGameState,
-    });
-});
-
-
-//End turn er et endpoint som vi kalder efter når en tur er færdig, den tager den currentplayer værdien og flipper den og sætter en ny /game i gang hvor det så er den nye spillers tur
-app.post('/end-turn', (req, res) => {
-    const { gameState } = req.body;
-
-    if (currentPlayer === 1) {
-        gameStates.player1 = { ...gameStates.player1, ...gameState };
-        currentPlayer = 2;
-    } else {
-        gameStates.player2 = { ...gameStates.player2, ...gameState };
-        currentPlayer = 1;
-    }
-
-
-    res.redirect('/game');
-});
-
-//Denne her endpoint bliver brugt til at gemme/opdatere gamestaten det sker ved at vi tager fat i det gamestate som der tilhører den spiller som i øjeblikket er ved at tage turen
-//og opdatere de forskellige værdier
-app.post('/api/update-score', (req, res) => {
-    const { category, score } = req.body;
-    const currentGameState = currentPlayer === 1 ? gameStates.player1 : gameStates.player2;
-
-    if (currentGameState.scores.hasOwnProperty(category)) {
-        currentGameState.scores[category] = score;
-        res.json({ success: true, gameState: currentGameState });
-    } else {
-        res.status(400).json({ success: false, message: 'Invalid score category' });
-    }
-});
-
-
-//En meget simpel endpoint der bare returner gamestaten til klientsiden
-app.get('/api/game-state', (req, res) => {
-    res.json(gameState);
-});
 
 app.listen(8443, 'localhost', () => {
     console.log('Server running on http://localhost:8443');
