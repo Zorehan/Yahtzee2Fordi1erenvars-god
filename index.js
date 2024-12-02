@@ -10,7 +10,6 @@ app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'assets')));
 const gamesPath = path.join(__dirname, 'assets', 'json', 'games.json');
-
 app.use(
     session({
         secret: 'bailabaila',
@@ -31,6 +30,7 @@ fs.readFile(loginsPath, 'utf-8', (err, data) => {
         playerLogins = JSON.parse(data)
     }
 });
+
 
 function readGames() {
     return new Promise((resolve, reject) => {
@@ -87,7 +87,6 @@ app.post('/login', (request, response) => {
         if(acc.username === username){
             if (acc.password === password){
                 request.session.user = { username };
-                console.log('Session after login:', request.session); // Debug log
                 response.redirect('/menu');
             } else {
                 response.render('login', {
@@ -100,20 +99,6 @@ app.post('/login', (request, response) => {
     });
 });
 
-app.get('/menu/join', async (req, res) => {
-    try {
-        const games = await readGames(); // Get all games from the games.json file
-        console.log('Games from file:', games); // Check the content of games.json
-
-        const availableGames = games.filter(game => game.players.length < game.maxPlayers); // Filter the available games
-        console.log('Available games:', availableGames); // Log filtered games
-
-        res.render('join', { games: availableGames }); // Render the join.pug template and pass the available games
-    } catch (error) {
-        console.error('Error fetching games:', error);
-        res.status(500).send('Server error');
-    }
-});
 //
 app.post('/menu/join', async (request, response) => {
     const { gameID } = request.body;
@@ -305,31 +290,45 @@ app.get('/logout', (request, response) => {
 });
 
 
-// OLD CODE
 
-
-//Gamewaiting screen er vores lobby som viser hvilke brugere der venter og er klar til et spil
-app.get('/gameWaitingScreen', (request, response) => {
-    if (request.session.user) {
-        response.render('gameWaitingScreen', {
-            username: request.session.user.username,
-            users: lobbyUsers,
-            pageName: 'Game Lobby',
-        });
+app.get('/menu/createAccount', async (request, response) => {
+    if (!request.session.user) {
+        response.render('createAccount');
     } else {
-        response.redirect('/');
+        response.redirect('/menu');
+    }
+});
+app.post('/createAccount', async (request, response) => {
+    const { username, password } = request.body;
+
+    let isUsed = false
+    playerLogins.forEach(acc => {
+        if(acc.username === username || acc.password === password){
+            isUsed = true
+        }
+    });
+
+    if(!isUsed){
+        const acc = {
+            "username": username,
+            "password": password
+        }
+        makeAcc(acc)
+        request.session.user = { username };
+        response.redirect('/menu');
+    }else{
+        response.redirect('/menu/createAccount');
     }
 });
 
-let currentPlayer = 1;
-let gameInProgress = false;
-
-
-app.post('/start-game', (req, res) => {
-    currentPlayer = 1;
-    gameInProgress = true;
-    res.redirect('/game');
-});
+function makeAcc(newAcc) {
+    return new Promise((resolve, reject) => {
+        fs.writeFile(loginsPath, JSON.stringify(newAcc, null, 2), (err) => {
+            if (err) reject(err);
+            else resolve();
+        });
+    });
+}
 
 
 app.listen(8443, 'localhost', () => {
