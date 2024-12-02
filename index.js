@@ -31,9 +31,8 @@ fs.readFile(loginsPath, 'utf-8', (err, data) => {
         playerLogins = (JSON.parse(data));
         console.log(playerLogins);
     }
-}
+});
 
-loadPlayerLogins();
 
 function readGames() {
     return new Promise((resolve, reject) => {
@@ -164,53 +163,53 @@ app.post('/menu/join', async (request, response) => {
 
 // Hosting a new game
 app.post('/menu/host', async (request, response) => {
-    const { gameID, password, playerLimit } = request.body;
+    const {gameID, password, playerLimit} = request.body;
 
-    if(!isUsed){
+    if (!isUsed) {
         const acc = {
-            username: username, 
-            password: password 
+            username: username,
+            password: password
         }
         const err = await makeAcc(acc);
-        if (err){
+        if (err) {
             response.redirect('/menu/createAccount');
         } else {
-            request.session.user = { username };
+            request.session.user = {username};
             response.redirect('/menu');
         }
-    }else{
+    } else {
         response.redirect('/menu/createAccount');
 
     }
 
-async function makeAcc(newAcc) {
-    await playerLogins.push(newAcc)
-    await fs.writeFile(loginsPath, JSON.stringify(playerLogins, null, 2), (err) => {
-        if (err) {
-            console.error('Error creating account failed', err);
-            return err;
-        } else {
-            console.log(playerLogins)
-        }
-    });
-}
-
-function getAcc(newAcc) {
-    return new Promise((resolve, reject) => {
-        playerLogins.add(newAcc)
-        fs.writeFile(loginsPath, JSON.stringify(playerLogins, null, 2), (err) => {
+    async function makeAcc(newAcc) {
+        await playerLogins.push(newAcc)
+        await fs.writeFile(loginsPath, JSON.stringify(playerLogins, null, 2), (err) => {
             if (err) {
-                console.error('Error reading playerLogins', err);
+                console.error('Error creating account failed', err);
+                return err;
             } else {
                 console.log(playerLogins)
             }
         });
-    });
-}
+    }
+
+    function getAcc(newAcc) {
+        return new Promise((resolve, reject) => {
+            playerLogins.add(newAcc)
+            fs.writeFile(loginsPath, JSON.stringify(playerLogins, null, 2), (err) => {
+                if (err) {
+                    console.error('Error reading playerLogins', err);
+                } else {
+                    console.log(playerLogins)
+                }
+            });
+        });
+    }
 
 
 // OLD COD
-
+    app.post('/menu/join', async (request, response) => {
         // Create a new game and include the host player
         const newGame = {
             game: gameID,
@@ -251,12 +250,9 @@ function getAcc(newAcc) {
         await writeGames(games);
 
         response.redirect('/menu/host');
-    } catch (error) {
-        console.error('Error writing to games.json:', error);
-        response.status(500).send('Server error');
-    }
-});
 
+    });
+});
 app.get('/menu/host', (request, response) => {
     if (request.session.user) {
         readGames().then((games) => {
@@ -302,11 +298,7 @@ app.get('/game/:gameId', async (req, res) => {
         // Check if the player is a spectator (not the current turn)
         const isSpectator = game.playerTurn !== username;
 
-        if (isSpectator) {
-            return res.render('game', { game, spectator: true });
-        } else {
-            return res.render('game', { game, spectator: false });
-        }
+        res.render('game', { game, player });
     } catch (error) {
         console.error('Error fetching game:', error);
         res.status(500).send('Error loading game');
