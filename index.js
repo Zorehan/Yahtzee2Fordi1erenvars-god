@@ -154,9 +154,13 @@ app.post('/createAccount', async (request, response) => {
             username: username, 
             password: password 
         }
-        await makeAcc(acc)
-        request.session.user = { username };
-        response.redirect('/menu');
+        const err = await makeAcc(acc);
+        if (err){
+            response.redirect('/menu/createAccount');
+        } else {
+            request.session.user = { username };
+            response.redirect('/menu');
+        }
     }else{
         response.redirect('/menu/createAccount');
     }
@@ -166,7 +170,8 @@ async function makeAcc(newAcc) {
     await playerLogins.push(newAcc)
     await fs.writeFile(loginsPath, JSON.stringify(playerLogins, null, 2), (err) => {
         if (err) {
-            console.error('Error reading playerLogins', err);
+            console.error('Error creating account failed', err);
+            return err;
         } else {
             console.log(playerLogins)
         }
