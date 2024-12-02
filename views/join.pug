@@ -1,13 +1,12 @@
+doctype html
 html
     head
-        title= pageName
+        title Join a Game
     body
-        h1= pageName
-        div(id="openGames", class="join")
-            each game in openGames  
-                li 
-                    a(href="/menu/join/" + game.properties.name) #{game.properties.name} | #{game.properties.host} | #{game.properties.players}/#{game.properties.maxPlayers}
-        div(id="currentGames", class="join")
-            each game in currentGames
-                li 
-                    a(href="/menu/join/" + game.properties.name) #{game.properties.name} | #{game.properties.host} | #{game.properties.players}/#{game.properties.maxPlayers}
+        h1 Available Games
+        ul
+            each game in games
+                li
+                    a(href=`/game/${game.game}`) Join Game #{game.name} - Host: #{game.host}
+        // Link to return to the main menu or create a new game
+        a(href="/menu") Back to Menu

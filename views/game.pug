@@ -3,19 +3,19 @@ html(lang="en")
     head
         meta(charset="UTF-8")
         title Yahtzee Game
-        link(rel="stylesheet", href="css/layout.css")
-        script(src="js/game.js", defer)
+        link(rel="stylesheet", href="style/layout.css")
+        script(src="game.js", defer)
     body
         h1 Yahtzee Game
-        p Player #{player}'s turn
+        p Player #{player.name}'s turn
 
         #diceBox
             #diceImages
-                img(src="images/diceSetsFolder/whiteDice/dice-1.png", id="dice1", value="1", onclick="selectDice(1)")
-                img(src="images/diceSetsFolder/whiteDice/dice-1.png", id="dice2", value="1", onclick="selectDice(2)")
-                img(src="images/diceSetsFolder/whiteDice/dice-1.png", id="dice3", value="1", onclick="selectDice(3)")
-                img(src="images/diceSetsFolder/whiteDice/dice-1.png", id="dice4", value="1", onclick="selectDice(4)")
-                img(src="images/diceSetsFolder/whiteDice/dice-1.png", id="dice5", value="1", onclick="selectDice(5)")
+                img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice1", value="1", onclick="selectDice(1)")
+                img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice2", value="1", onclick="selectDice(2)")
+                img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice3", value="1", onclick="selectDice(3)")
+                img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice4", value="1", onclick="selectDice(4)")
+                img(src="diceSetsFolder/whiteDice/dice-1.png", id="dice5", value="1", onclick="selectDice(5)")
 
         #rollBar
             p Rolls left:
@@ -28,8 +28,8 @@ html(lang="en")
                     tr
                         th Score
                 tbody
-                    // Loop through each score category in gameState.scores
-                    each value, category in gameState.scores
+                    // Loop through each score category in the current player's score data
+                    each value, category in player.scores
                         tr
                             td #{category}
                             td
@@ -37,7 +37,7 @@ html(lang="en")
 
                     tr.totalRow
                         td Samlet point øverst:
-                        td#upperTotal= gameState.scores.aces + gameState.scores.twos + gameState.scores.threes + gameState.scores.fours + gameState.scores.fives + gameState.scores.sixes
+                        td#upperTotal= player.scores.aces + player.scores.twos + player.scores.threes + player.scores.fours + player.scores.fives + player.scores.sixes
                     tr
                         td Et Par
                         td
@@ -76,10 +76,10 @@ html(lang="en")
                             input(type="number", id="chance", disabled)
                     tr.totalRow
                         td Samlet point nederest:
-                        td#lowerTotal= gameState.scores.onePair + gameState.scores.twoPairs + gameState.scores.threeOfAKind + gameState.scores.fourOfAKind + gameState.scores.fullHouse + gameState.scores.smallStraight + gameState.scores.largeStraight + gameState.scores.yahtzee + gameState.scores.chance
+                        td#lowerTotal= player.scores.onePair + player.scores.twoPairs + player.scores.threeOfAKind + player.scores.fourOfAKind + player.scores.fullHouse + player.scores.smallStraight + player.scores.largeStraight + player.scores.yahtzee + player.scores.chance
                     tr.total
                         td Samlet score:
-                        td#totalScore= gameState.scores.aces + gameState.scores.twos + gameState.scores.threes + gameState.scores.fours + gameState.scores.fives + gameState.scores.sixes + gameState.scores.onePair + gameState.scores.twoPairs + gameState.scores.threeOfAKind + gameState.scores.fourOfAKind + gameState.scores.fullHouse + gameState.scores.smallStraight + gameState.scores.largeStraight + gameState.scores.yahtzee + gameState.scores.chance
+                        td#totalScore= player.scores.aces + player.scores.twos + player.scores.threes + player.scores.fours + player.scores.fives + player.scores.sixes + player.scores.onePair + player.scores.twoPairs + player.scores.threeOfAKind + player.scores.fourOfAKind + player.scores.fullHouse + player.scores.smallStraight + player.scores.largeStraight + player.scores.yahtzee + player.scores.chance
 
         #skins
             button(id="Skin" onclick="onClickBlackDiceBtn()") BlackDice

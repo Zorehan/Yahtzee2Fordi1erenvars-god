@@ -8,6 +8,7 @@ function rollDie() {
 }
 
 
+
 //Rolldice metoden er det som pugfilen kalder som sin onClick når der bliver trykket på "Roll" knappen
 function rollDice() {
     if (rollsLeft > 0) {
