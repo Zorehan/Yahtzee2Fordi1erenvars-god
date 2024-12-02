@@ -2,9 +2,11 @@ doctype html
 html
     head
         title= pageName
+        link(rel="stylesheet", href="css/menuPage.css")
     body
-        h1= pageName
-        if loggedIn
-            include includes/menu/userMenu
-        else
-            include includes/menu/unregisteredMenu
+        div(id="button")
+            h1= pageName
+            if loggedIn
+                include includes/menu/userMenu
+            else
+                include includes/menu/unregisteredMenu
