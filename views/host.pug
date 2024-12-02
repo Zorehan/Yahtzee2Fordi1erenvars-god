@@ -1,18 +1,21 @@
+doctype html
 html
     head
         title= pageName
     body
-        h1= pageName
-        form(action="/createGame", method="POST")
-            label GAME ID: 
-            input(type="text", name="gameID")
-            label PASSWORD:
-            input(type="text", name="password")
-            label PLAYER LIMIT:
-            input(type="text", name="playerLimit")
-            button(type="submit") CREATE GAME
-        div(id="yourGames", class="host")
-            h2 YOUR GAMES
+        h1 Host a Game
+        form(action="/menu/host", method="POST")
+            label(for="gameID") Game ID:
+            input(type="text", name="gameID", id="gameID", required)
+            br
+            label(for="password") Password (optional):
+            input(type="text", name="password", id="password")
+            br
+            label(for="playerLimit") Player Limit:
+            input(type="number", name="playerLimit", id="playerLimit", min="1", required)
+            br
+            button(type="submit") Create Game
+        h2 Your Games
+        ul
             each game in yourGames
-                li 
-                    a(href="/menu/host/" + game.properties.name) #{game.properties.name} | #{game.properties.host} | #{game.properties.players}/#{game.properties.maxPlayers}
+                li= `${game.game} (Host: ${game.host})`

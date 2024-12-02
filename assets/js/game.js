@@ -8,6 +8,7 @@ function rollDie() {
 }
 
 
+
 //Rolldice metoden er det som pugfilen kalder som sin onClick når der bliver trykket på "Roll" knappen
 function rollDice() {
     if (rollsLeft > 0) {
@@ -23,7 +24,6 @@ function rollDice() {
         //Vores all around check metode for at se hvilke felter spilleren evt. kunne plotte værdierne ind i
         checkValidFields();
         //Denne her metode opdateren de valide felter med de værdier det ville ende med at give hvis spilleren valgte at plotte sin slag ind
-        updateScoreFields();
 
         let rollsLeftText = document.getElementById('rollsLeftText');
         rollsLeftText.textContent = rollsLeft;
