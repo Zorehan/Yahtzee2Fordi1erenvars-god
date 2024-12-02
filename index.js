@@ -21,13 +21,14 @@ app.use(
 
 //const loginsPath = path.join(__dirname, 'assets', 'playerLogins');
 const loginsPath = 'assets/json/users.json';
-let playerLogins = {};
+let playerLogins = [];
 //Metode der læser filen og gemmer de forskelige logins i en variable defineret øverst i koden
 fs.readFile(loginsPath, 'utf-8', (err, data) => {
     if (err) {
         console.error('Error reading playerLogins', err);
     } else {
-        playerLogins = JSON.parse(data)
+        playerLogins = (JSON.parse(data));
+        console.log(playerLogins);
     }
 });
 
@@ -150,10 +151,10 @@ app.post('/createAccount', async (request, response) => {
 
     if(!isUsed){
         const acc = {
-            "username": username, 
-            "password": password 
+            username: username, 
+            password: password 
         }
-        makeAcc(acc)
+        await makeAcc(acc)
         request.session.user = { username };
         response.redirect('/menu');
     }else{
@@ -161,14 +162,30 @@ app.post('/createAccount', async (request, response) => {
     }
 });
 
-function makeAcc(newAcc) {
+async function makeAcc(newAcc) {
+    await playerLogins.push(newAcc)
+    await fs.writeFile(loginsPath, JSON.stringify(playerLogins, null, 2), (err) => {
+        if (err) {
+            console.error('Error reading playerLogins', err);
+        } else {
+            console.log(playerLogins)
+        }
+    });
+}
+
+function getAcc(newAcc) {
     return new Promise((resolve, reject) => {
-        fs.writeFile(loginsPath, JSON.stringify(newAcc, null, 2), (err) => {
-            if (err) reject(err);
-            else resolve();
+        playerLogins.add(newAcc)
+        fs.writeFile(loginsPath, JSON.stringify(playerLogins, null, 2), (err) => {
+            if (err) {
+                console.error('Error reading playerLogins', err);
+            } else {
+                console.log(playerLogins)
+            }
         });
     });
 }
+
 
 // OLD CODE
 
