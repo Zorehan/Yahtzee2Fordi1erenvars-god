@@ -65,132 +65,9 @@
     ]
   },
   {
-    "game": "Emilos",
-    "host": "gær",
-    "playerTurn": null,
-    "dice": {
-      "diceSkin": "whiteDice",
-      "Results": [
-        1,
-        1,
-        1,
-        1,
-        1
-      ],
-      "Held": [
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "rollsLeft": 3
-    },
-    "players": []
-  },
-  {
-    "game": "Bilosnilos",
-    "host": "gær",
-    "playerTurn": null,
-    "dice": {
-      "diceSkin": "whiteDice",
-      "Results": [
-        1,
-        1,
-        1,
-        1,
-        1
-      ],
-      "Held": [
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "rollsLeft": 3
-    },
-    "players": []
-  },
-  {
-    "game": "asdjkaskdj",
-    "host": "gær",
-    "playerTurn": null,
-    "maxPlayers": "4",
-    "dice": {
-      "diceSkin": "whiteDice",
-      "Results": [
-        1,
-        1,
-        1,
-        1,
-        1
-      ],
-      "Held": [
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "rollsLeft": 3
-    },
-    "players": []
-  },
-  {
-    "game": "nytspil",
-    "host": "gær",
-    "playerTurn": null,
-    "maxPlayers": "4",
-    "dice": {
-      "diceSkin": "whiteDice",
-      "Results": [
-        1,
-        1,
-        1,
-        1,
-        1
-      ],
-      "Held": [
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "rollsLeft": 3
-    },
-    "players": []
-  },
-  {
-    "game": "tihi",
-    "host": "gær",
-    "playerTurn": null,
-    "maxPlayers": "6",
-    "dice": {
-      "diceSkin": "whiteDice",
-      "Results": [
-        1,
-        1,
-        1,
-        1,
-        1
-      ],
-      "Held": [
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "rollsLeft": 3
-    },
-    "players": []
-  },
-  {
-    "game": "storhaha",
-    "host": "gær",
-    "playerTurn": "gær",
+    "game": "haha",
+    "host": "gærgryn",
+    "playerTurn": "gærgryn",
     "maxPlayers": "3",
     "dice": {
       "diceSkin": "whiteDice",
@@ -212,7 +89,7 @@
     },
     "players": [
       {
-        "Player": "gær",
+        "Player": "gærgryn",
         "scores": {
           "aces": false,
           "twos": false,

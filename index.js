@@ -21,15 +21,24 @@ app.use(
 
 //const loginsPath = path.join(__dirname, 'assets', 'playerLogins');
 const loginsPath = 'assets/json/users.json';
-let playerLogins = {};
-//Metode der læser filen og gemmer de forskelige logins i en variable defineret øverst i koden
-fs.readFile(loginsPath, 'utf-8', (err, data) => {
-    if (err) {
-        console.error('Error reading playerLogins', err);
-    } else {
-        playerLogins = JSON.parse(data)
+let playerLogins = [];
+
+async function loadPlayerLogins() {
+    try {
+        const data = await fs.promises.readFile(loginsPath, 'utf-8');
+        playerLogins = JSON.parse(data);
+        if (!Array.isArray(playerLogins)) {
+            throw new Error('playerLogins must be an array');
+        }
+    } catch (err) {
+        console.error('Error loading playerLogins:', err);
+        playerLogins = []; // Default to an empty array on error
     }
-});
+}
+
+
+
+loadPlayerLogins();
 
 
 function readGames() {
@@ -97,6 +106,21 @@ app.post('/login', (request, response) => {
             }
         }
     });
+});
+
+app.get('/menu/join', async (req, res) => {
+    try {
+        const games = await readGames(); // Get all games from the games.json file
+        console.log('Games from file:', games); // Check the content of games.json
+
+        const availableGames = games.filter(game => game.players.length < game.maxPlayers); // Filter the available games
+        console.log('Available games:', availableGames); // Log filtered games
+
+        res.render('join', { games: availableGames }); // Render the join.pug template and pass the available games
+    } catch (error) {
+        console.error('Error fetching games:', error);
+        res.status(500).send('Server error');
+    }
 });
 
 //
