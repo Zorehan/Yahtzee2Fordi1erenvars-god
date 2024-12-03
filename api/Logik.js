@@ -1,3 +1,7 @@
+import {Router} from 'express'
+let gamelogic = Router()
+
+
 
 // Initialize dice results, whether the dice are held, remaining rolls, and the selected dice skin
 let diceResults = [1, 1, 1, 1, 1];
