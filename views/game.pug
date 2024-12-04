@@ -35,6 +35,18 @@ html(lang="en")
                             td #{category}
                             td
                                 input(type="number", name="score", value=value, id=category, disabled)
+
+                    tr.totalRow
+                        td Samlet point øverst:
+                        td#upperTotal= player.scores.aces + player.scores.twos + player.scores.threes + player.scores.fours + player.scores.fives + player.scores.sixes
+
+                    tr.totalRow
+                        td Samlet point nederest:
+                        td#lowerTotal= player.scores.onePair + player.scores.twoPairs + player.scores.threeOfAKind + player.scores.fourOfAKind + player.scores.fullHouse + player.scores.smallStraight + player.scores.largeStraight + player.scores.yahtzee + player.scores.chance
+                    tr.total
+                        td Samlet score:
+                        td#totalScore= player.scores.aces + player.scores.twos + player.scores.threes + player.scores.fours + player.scores.fives + player.scores.sixes + player.scores.onePair + player.scores.twoPairs + player.scores.threeOfAKind + player.scores.fourOfAKind + player.scores.fullHouse + player.scores.smallStraight + player.scores.largeStraight + player.scores.yahtzee + player.scores.chance
+
         #skins
             button(id="Skin" onclick="onClickBlackDiceBtn()") BlackDice
             button(id="Skin" onclick="onClickNumberedDiceBtn()") Numbered Dice 3D
