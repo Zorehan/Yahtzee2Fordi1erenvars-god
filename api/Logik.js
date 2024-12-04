@@ -1,3 +1,7 @@
+import {Router} from 'express'
+let gamelogic = Router()
+
+
 
 // Initialize dice results, whether the dice are held, remaining rolls, and the selected dice skin
 let diceResults = [1, 1, 1, 1, 1];
@@ -177,4 +181,4 @@ function updateScoreFields() {
 function resetScoreFields() { /* Clear unheld input fields */ }
 function resetGame() { /* Reset dice, rolls, and game state */ }
 
-
+export default gamelogic
