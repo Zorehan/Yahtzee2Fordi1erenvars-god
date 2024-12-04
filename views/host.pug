@@ -2,18 +2,19 @@ doctype html
 html
     head
         title= pageName
+        link(rel="stylesheet", href="/css/background.css")
+        link(rel="stylesheet", href="/css/forms.css")
+        link(rel="stylesheet", href="/css/inputsAndLabels.css")
+        link(rel="stylesheet", href="/css/buttons.css")
     body
         h1 Host a Game
         form(action="/menu/host", method="POST")
             label(for="gameID") Game ID:
             input(type="text", name="gameID", id="gameID", required)
-            br
             label(for="password") Password (optional):
             input(type="text", name="password", id="password")
-            br
             label(for="playerLimit") Player Limit:
             input(type="number", name="playerLimit", id="playerLimit", min="1", required)
-            br
             button(type="submit") Create Game
         h2 Your Games
         ul
