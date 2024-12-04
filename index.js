@@ -1,15 +1,14 @@
-const express = require('express');
+import express from 'express'
 const app = express();
-const session = require('express-session');
-const fs = require('fs');
-const path = require('path');
+import session from 'express-session';
+import fs from 'fs'
+import path from 'path'
 
 app.use(express.static('assets'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'pug');
-app.use(express.static(path.join(__dirname, 'assets')));
-const gamesPath = path.join(__dirname, 'assets', 'json', 'games.json');
+app.use(express.static('assets'));
 app.use(
     session({
         secret: 'bailabaila',
@@ -18,6 +17,7 @@ app.use(
         cookie: { secure: false },
     })
 );
+const gamesPath = 'assets/json/games.json'
 
 //const loginsPath = path.join(__dirname, 'assets', 'playerLogins');
 const loginsPath = 'assets/json/users.json';
@@ -160,6 +160,9 @@ app.post('/menu/join', async (request, response) => {
         response.status(500).send('Server error');
     }
 });
+
+import gamelogic from './api/Logik.js';
+app.use('/gamelogic',gamelogic)
 
 // Hosting a new game
 app.post('/menu/host', async (request, response) => {

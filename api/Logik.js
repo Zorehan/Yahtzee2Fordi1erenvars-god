@@ -181,4 +181,4 @@ function updateScoreFields() {
 function resetScoreFields() { /* Clear unheld input fields */ }
 function resetGame() { /* Reset dice, rolls, and game state */ }
 
-
+export default gamelogic
