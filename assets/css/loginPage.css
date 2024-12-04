@@ -1,0 +1,17 @@
+.loginPane{
+    width: 100%;
+    min-height: 100%;
+    max-height: none;
+}
+
+.formBox{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    padding: 1%;
+    gap: 0.2cm;
+    min-width: fit-content;
+    max-width: 7cm;
+}
