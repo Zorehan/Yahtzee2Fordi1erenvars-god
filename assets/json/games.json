@@ -1,51 +1,56 @@
 [
   {
     "gameId": 0,
-    "player1": {
-      "diceResults": [1, 1, 1, 1, 1],
-      "diceHeld": [false, false, false, false, false],
-      "rollsLeft": 3,
-      "diceSkin": "whiteDice",
-      "scores": {
-        "aces": 0,
-        "twos": 0,
-        "threes": 0,
-        "fours": 0,
-        "fives": 0,
-        "sixes": 0,
-        "onePair": 0,
-        "twoPairs": 0,
-        "threeOfAKind": 0,
-        "fourOfAKind": 0,
-        "fullHouse": 0,
-        "smallStraight": 0,
-        "largeStraight": 0,
-        "yahtzee": 0,
-        "chance": 0
+    "players": [
+      {
+        "name": "gærgryn",
+        "diceResults": [1, 1, 1, 1, 1],
+        "diceHeld": [false, false, false, false, false],
+        "rollsLeft": 3,
+        "diceSkin": "whiteDice",
+        "scores": {
+          "aces": 0,
+          "twos": 0,
+          "threes": 0,
+          "fours": 0,
+          "fives": 0,
+          "sixes": 0,
+          "onePair": 0,
+          "twoPairs": 0,
+          "threeOfAKind": 0,
+          "fourOfAKind": 0,
+          "fullHouse": 0,
+          "smallStraight": 0,
+          "largeStraight": 0,
+          "yahtzee": 0,
+          "chance": 0
+        }
+      },
+      {
+        "name": "kimo",
+        "diceResults": [1, 1, 1, 1, 1],
+        "diceHeld": [false, false, false, false, false],
+        "rollsLeft": 3,
+        "diceSkin": "whiteDice",
+        "scores": {
+          "aces": 0,
+          "twos": 0,
+          "threes": 0,
+          "fours": 0,
+          "fives": 0,
+          "sixes": 0,
+          "onePair": 0,
+          "twoPairs": 0,
+          "threeOfAKind": 0,
+          "fourOfAKind": 0,
+          "fullHouse": 0,
+          "smallStraight": 0,
+          "largeStraight": 0,
+          "yahtzee": 0,
+          "chance": 0
+        }
       }
-    },
-    "player2": {
-      "diceResults": [1, 1, 1, 1, 1],
-      "diceHeld": [false, false, false, false, false],
-      "rollsLeft": 3,
-      "diceSkin": "whiteDice",
-      "scores": {
-        "aces": 0,
-        "twos": 0,
-        "threes": 0,
-        "fours": 0,
-        "fives": 0,
-        "sixes": 0,
-        "onePair": 0,
-        "twoPairs": 0,
-        "threeOfAKind": 0,
-        "fourOfAKind": 0,
-        "fullHouse": 0,
-        "smallStraight": 0,
-        "largeStraight": 0,
-        "yahtzee": 0,
-        "chance": 0
-      }
-    }
+    ],
+    "maxPlayers": 2
   }
 ]

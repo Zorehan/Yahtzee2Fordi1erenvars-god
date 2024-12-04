@@ -37,7 +37,7 @@ function onClickNumberedDiceBtn() {
 function updateDiceImages() {
     for (let i = 0; i < diceResults.length; i++) {
         let diceImage = document.getElementById(`dice${i + 1}`);
-        diceImage.src = `/diceSetsFolder/${diceSkin}/dice-${diceResults[i]}.png`;
+        diceImage.src = `/images/diceSetsFolder/${diceSkin}/dice-${diceResults[i]}.png`;
 
         if (diceHeld[i]) {
             diceImage.classList.add('held');

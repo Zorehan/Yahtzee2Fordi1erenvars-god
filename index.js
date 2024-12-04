@@ -1,8 +1,8 @@
-import express from 'express'
+const express = require('express');
 const app = express();
-import session from 'express-session';
-import fs from 'fs'
-import path from 'path'
+const session = require('express-session');
+const fs = require('fs');
+const path = require('path');
 
 app.use(express.static('assets'));
 app.use(express.json());
@@ -155,13 +155,16 @@ app.post('/login', (request, response) => {
 
 app.get('/menu/join', async (req, res) => {
     try {
-        const games = await readGames(); // Get all games from the games.json file
-        console.log('Games from file:', games); // Check the content of games.json
+        const games = await readGames(); // Read all games from games.json
 
-        const availableGames = games.filter(game => game.players.length < game.maxPlayers); // Filter the available games
-        console.log('Available games:', availableGames); // Log filtered games
+        // Filter games based on whether the players array has less than 2 players
+        const availableGames = games.filter(game => game.players && game.players.length < 3 );
 
-        res.render('join', { games: availableGames }); // Render the join.pug template and pass the available games
+        // Log filtered games for debugging
+        console.log('Available games:', availableGames);
+
+        // Render the join.pug template and pass available games
+        res.render('join', { games: availableGames });
     } catch (error) {
         console.error('Error fetching games:', error);
         res.status(500).send('Server error');
@@ -218,8 +221,6 @@ app.post('/menu/join', async (req, res) => {
     }
 });
 
-import gamelogic from './api/Logik.js';
-app.use('/gamelogic',gamelogic)
 
 // Hosting a new game
 app.post('/menu/host', async (request, response) => {
@@ -359,40 +360,22 @@ app.post('/end-turn', async (req, res) => {
 
 // Serve the game page with turn-based logic
 app.get('/game/:gameId', async (req, res) => {
-    const gameId = req.params.gameId;
+    const { gameId } = req.params; // Extract gameId from request parameters
+    const game = await getGameById(gameId);
 
-    try {
-        const game = await getGameById(gameId);
+    const username = req.session.user?.username;
 
-        if (!game) {
-            return res.status(404).send('Game not found.');
-        }
-
-        const username = req.session.user?.username;
-
-        if (!username) {
-            return res.status(403).send('User not logged in.');
-        }
-
-        const isPlayer1 = game.player1.username === username;
-        const isPlayer2 = game.player2.username === username;
-
-        if (!isPlayer1 && !isPlayer2) {
-            return res.status(403).send('You are not a player in this game.');
-        }
-
-        const isSpectator = (game.currentTurn === "player1" && !isPlayer1) ||
-            (game.currentTurn === "player2" && !isPlayer2);
-
-        res.render('game', {
-            game,
-            player: isPlayer1 ? game.player1 : game.player2,
-            isSpectator,
-        });
-    } catch (err) {
-        console.error('Error fetching game:', err);
-        res.status(500).send('Error loading game.');
+    if (!username) {
+        return res.status(403).send('User not logged in.');
     }
+
+    const player = game.players.find(p => p.name === username);
+    if (!player) {
+        return res.status(403).send('You are not a player in this game.');
+    }
+
+    const isSpectator = game.players[game.currentTurn] !== player;
+    res.render('game', { game, player, isSpectator });
 });
 
 app.get('/game', (req, res) => {
@@ -418,6 +401,5 @@ app.post('/start-game', (req, res) => {
     res.redirect('/game');
 });
 
-app.listen(3000, () => {
-    console.log('Server started on http://localhost:3000');
-});
+app.listen(3000, '192.168.213.207')
+
