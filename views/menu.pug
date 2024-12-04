@@ -3,11 +3,11 @@ html
     head
         title= pageName
         link(rel="stylesheet", href="/css/menuPage.css")
+        link(rel="stylesheet", href="/css/background.css")
         link(rel="stylesheet", href="/css/buttons.css")
     body
         div(id="menu" class="menuPane")
             h1= pageName
-            
             div(id="menuButtons" class="buttonBox")
                 if loggedIn
                     include includes/menu/userMenu
