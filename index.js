@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'assets')));
-
+app.use(express.static(path.join(__dirname, 'assets/css')));
 app.use(
     session({
         secret: 'bailabaila',
