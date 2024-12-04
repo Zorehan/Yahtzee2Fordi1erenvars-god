@@ -436,5 +436,5 @@ async function saveGameState(game) {
     }
 }
 
-app.listen(3000, '192.168.213.207')
+app.listen(3000)
 
