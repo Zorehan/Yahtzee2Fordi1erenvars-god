@@ -1,113 +1,51 @@
 [
   {
-    "game": "gameName",
-    "host": "hostName",
-    "playerTurn": "playerName",
-    "dice": {
+    "gameId": 0,
+    "player1": {
+      "diceResults": [1, 1, 1, 1, 1],
+      "diceHeld": [false, false, false, false, false],
+      "rollsLeft": 3,
       "diceSkin": "whiteDice",
-      "Results": [
-        1,
-        1,
-        1,
-        1,
-        1
-      ],
-      "Held": [
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "rollsLeft": 3
-    },
-    "players": [
-      {
-        "Player": "navn",
-        "scores": {
-          "aces": -1,
-          "twos": 8,
-          "threes": false,
-          "fours": false,
-          "fives": false,
-          "sixes": 18,
-          "onePair": false,
-          "twoPairs": false,
-          "threeOfAKind": false,
-          "fourOfAKind": false,
-          "fullHouse": 22,
-          "smallStraight": false,
-          "largeStraight": false,
-          "yahtzee": false,
-          "chance": false
-        }
-      },
-      {
-        "Player": "navn",
-        "scores": {
-          "aces": false,
-          "twos": 8,
-          "threes": false,
-          "fours": false,
-          "fives": false,
-          "sixes": 18,
-          "onePair": false,
-          "twoPairs": false,
-          "threeOfAKind": false,
-          "fourOfAKind": false,
-          "fullHouse": 22,
-          "smallStraight": false,
-          "largeStraight": false,
-          "yahtzee": false,
-          "chance": false
-        }
+      "scores": {
+        "aces": 0,
+        "twos": 0,
+        "threes": 0,
+        "fours": 0,
+        "fives": 0,
+        "sixes": 0,
+        "onePair": 0,
+        "twoPairs": 0,
+        "threeOfAKind": 0,
+        "fourOfAKind": 0,
+        "fullHouse": 0,
+        "smallStraight": 0,
+        "largeStraight": 0,
+        "yahtzee": 0,
+        "chance": 0
       }
-    ]
-  },
-  {
-    "game": "haha",
-    "host": "gærgryn",
-    "playerTurn": "gærgryn",
-    "maxPlayers": "3",
-    "dice": {
+    },
+    "player2": {
+      "diceResults": [1, 1, 1, 1, 1],
+      "diceHeld": [false, false, false, false, false],
+      "rollsLeft": 3,
       "diceSkin": "whiteDice",
-      "Results": [
-        1,
-        1,
-        1,
-        1,
-        1
-      ],
-      "Held": [
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "rollsLeft": 3
-    },
-    "players": [
-      {
-        "Player": "gærgryn",
-        "scores": {
-          "aces": false,
-          "twos": false,
-          "threes": false,
-          "fours": false,
-          "fives": false,
-          "sixes": false,
-          "onePair": false,
-          "twoPairs": false,
-          "threeOfAKind": false,
-          "fourOfAKind": false,
-          "fullHouse": false,
-          "smallStraight": false,
-          "largeStraight": false,
-          "yahtzee": false,
-          "chance": false
-        }
+      "scores": {
+        "aces": 0,
+        "twos": 0,
+        "threes": 0,
+        "fours": 0,
+        "fives": 0,
+        "sixes": 0,
+        "onePair": 0,
+        "twoPairs": 0,
+        "threeOfAKind": 0,
+        "fourOfAKind": 0,
+        "fullHouse": 0,
+        "smallStraight": 0,
+        "largeStraight": 0,
+        "yahtzee": 0,
+        "chance": 0
       }
-    ]
+    }
   }
 ]

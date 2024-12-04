@@ -33,6 +33,56 @@ fs.readFile(loginsPath, 'utf-8', (err, data) => {
     }
 });
 
+let gameStates = {
+    gameId: 0,
+    player1: {
+        diceResults: [1, 1, 1, 1, 1],
+        diceHeld: [false, false, false, false, false],
+        rollsLeft: 3,
+        diceSkin: 'whiteDice',
+        scores: {
+            aces: 0,
+            twos: 0,
+            threes: 0,
+            fours: 0,
+            fives: 0,
+            sixes: 0,
+            onePair: 0,
+            twoPairs: 0,
+            threeOfAKind: 0,
+            fourOfAKind: 0,
+            fullHouse: 0,
+            smallStraight: 0,
+            largeStraight: 0,
+            yahtzee: 0,
+            chance: 0,
+        },
+    },
+    player2: {
+        diceResults: [1, 1, 1, 1, 1],
+        diceHeld: [false, false, false, false, false],
+        rollsLeft: 3,
+        diceSkin: 'whiteDice',
+        scores: {
+            aces: 0,
+            twos: 0,
+            threes: 0,
+            fours: 0,
+            fives: 0,
+            sixes: 0,
+            onePair: 0,
+            twoPairs: 0,
+            threeOfAKind: 0,
+            fourOfAKind: 0,
+            fullHouse: 0,
+            smallStraight: 0,
+            largeStraight: 0,
+            yahtzee: 0,
+            chance: 0,
+        },
+    },
+};
+
 
 function readGames() {
     return new Promise((resolve, reject) => {
@@ -40,15 +90,6 @@ function readGames() {
             if (err) reject(err);
             else resolve(JSON.parse(data));
         });
-    });
-}
-
-function getGameById(gameId) {
-    return readGames().then(games => {
-        return games.find(game => game.game === gameId); // Assuming 'game' is the unique identifier in your games data
-    }).catch(err => {
-        console.error('Error fetching game by ID:', err);
-        return null;
     });
 }
 
@@ -60,6 +101,17 @@ function writeGames(games) {
         });
     });
 }
+
+function getGameById(gameId) {
+    return readGames()
+        .then((games) => games.find((game) => game.gameId === parseInt(gameId)))
+        .catch((err) => {
+            console.error('Error fetching game by ID:', err);
+            return null;
+        });
+}
+
+
 
 app.get('/', (request, response) => {
     response.redirect('/menu');
@@ -117,47 +169,52 @@ app.get('/menu/join', async (req, res) => {
 });
 
 // Add player to a game
-app.post('/menu/join', async (request, response) => {
-    const { gameID } = request.body;
+app.post('/menu/join', async (req, res) => {
+    const { gameId } = req.body;
 
     try {
         const games = await readGames();
-        const game = games.find((game) => game.game === gameID);
+        const game = games.find((g) => g.gameId === parseInt(gameId));
 
         if (!game) {
-            return response.status(404).send('Game not found.');
+            return res.status(404).send('Game not found.');
         }
 
-        if (game.players.length >= game.maxPlayers) {
-            return response.status(400).send('Game is full.');
+        if (game.player2.username) {
+            return res.status(400).send('Game is already full.');
         }
 
-        // Add player to the game if not already added
-        if (!game.players.some((player) => player.Player === request.session.user.username)) {
-            game.players.push({
-                Player: request.session.user.username,
-                scores: {
-                    aces: false,
-                    twos: false,
-                    threes: false,
-                    fours: false,
-                    fives: false,
-                    sixes: false,
-                    onePair: false,
-                    twoPairs: false,
-                    threeOfAKind: false,
-                    fourOfAKind: false,
-                    fullHouse: false,
-                    smallStraight: false,
-                    largeStraight: false,
-                    yahtzee: false,
-                    chance: false,
-                },
-            });
-        }
-    } catch (error) {
-        console.error('Error updating games.json:', error);
-        response.status(500).send('Server error');
+        // Add the second player
+        game.player2 = {
+            username: req.session.user.username,
+            diceResults: [1, 1, 1, 1, 1],
+            diceHeld: [false, false, false, false, false],
+            rollsLeft: 3,
+            diceSkin: "whiteDice",
+            scores: {
+                aces: 0,
+                twos: 0,
+                threes: 0,
+                fours: 0,
+                fives: 0,
+                sixes: 0,
+                onePair: 0,
+                twoPairs: 0,
+                threeOfAKind: 0,
+                fourOfAKind: 0,
+                fullHouse: 0,
+                smallStraight: 0,
+                largeStraight: 0,
+                yahtzee: 0,
+                chance: 0,
+            },
+        };
+
+        await writeGames(games);
+        res.redirect(`/game/${gameId}`);
+    } catch (err) {
+        console.error('Error joining game:', err);
+        res.status(500).send('Error joining game.');
     }
 });
 
@@ -273,39 +330,92 @@ app.get('/menu/host', (request, response) => {
     }
 });
 
+app.post('/end-turn', async (req, res) => {
+    const { gameId, gameState } = req.body; // Received gameId and game state from client
+
+    try {
+        const games = await readGames();
+        const game = games.find((g) => g.gameId === parseInt(gameId));
+
+        if (!game) {
+            return res.status(404).send('Game not found.');
+        }
+
+        if (req.session.user.username === game.player1.username) {
+            game.player1 = { ...game.player1, ...gameState };
+            game.currentTurn = "player2"; // Switch to player2
+        } else if (req.session.user.username === game.player2.username) {
+            game.player2 = { ...game.player2, ...gameState };
+            game.currentTurn = "player1"; // Switch to player1
+        }
+
+        await writeGames(games);
+        res.redirect(`/game/${gameId}`);
+    } catch (err) {
+        console.error('Error ending turn:', err);
+        res.status(500).send('Error ending turn.');
+    }
+});
+
 // Serve the game page with turn-based logic
 app.get('/game/:gameId', async (req, res) => {
     const gameId = req.params.gameId;
-    console.log('Session:', req.session);  // Debugging: check session data
+
     try {
-        const game = await getGameById(gameId); // Await the promise returned by getGameById
+        const game = await getGameById(gameId);
 
         if (!game) {
-            return res.status(404).send('Game not found');
+            return res.status(404).send('Game not found.');
         }
 
-        const username = req.session.user.username; // Get player username from session
-        console.log('Player username:', username);  // Debugging: check player username
+        const username = req.session.user?.username;
 
         if (!username) {
-            return res.status(404).send('Player not found'); // No username in session
+            return res.status(403).send('User not logged in.');
         }
 
-        // Find the player in the game using the username
-        const player = game.players.find(p => p.Player === username);
+        const isPlayer1 = game.player1.username === username;
+        const isPlayer2 = game.player2.username === username;
 
-        if (!player) {
-            return res.status(404).send('Player not found'); // If the player doesn't exist in the game
+        if (!isPlayer1 && !isPlayer2) {
+            return res.status(403).send('You are not a player in this game.');
         }
 
-        // Check if the player is a spectator (not the current turn)
-        const isSpectator = game.playerTurn !== username;
+        const isSpectator = (game.currentTurn === "player1" && !isPlayer1) ||
+            (game.currentTurn === "player2" && !isPlayer2);
 
-        res.render('game', { game, player });
-    } catch (error) {
-        console.error('Error fetching game:', error);
-        res.status(500).send('Error loading game');
+        res.render('game', {
+            game,
+            player: isPlayer1 ? game.player1 : game.player2,
+            isSpectator,
+        });
+    } catch (err) {
+        console.error('Error fetching game:', err);
+        res.status(500).send('Error loading game.');
     }
+});
+
+app.get('/game', (req, res) => {
+    if (!gameInProgress) {
+        return res.redirect('/');
+    }
+
+    // Get the current game state based on which player's turn it is
+    const currentGameState = currentPlayer === 1 ? gameStates.player1 : gameStates.player2;
+
+    res.render('game', {
+        player: currentPlayer,
+        gameState: currentGameState,
+    });
+});
+
+let currentPlayer = 1;
+let gameInProgress = false;
+
+app.post('/start-game', (req, res) => {
+    currentPlayer = 1;
+    gameInProgress = true;
+    res.redirect('/game');
 });
 
 app.listen(3000, () => {
