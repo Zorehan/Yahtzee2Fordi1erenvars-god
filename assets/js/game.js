@@ -7,9 +7,6 @@ function rollDie() {
     return Math.floor(Math.random() * 6) + 1;
 }
 
-
-
-//Rolldice metoden er det som pugfilen kalder som sin onClick når der bliver trykket på "Roll" knappen
 function rollDice() {
     if (rollsLeft > 0) {
         for (let i = 0; i < diceResults.length; i++) {
@@ -17,23 +14,26 @@ function rollDice() {
                 diceResults[i] = rollDie();
             }
         }
-        //Denne her metode opdaterer billederne så det passser med de nye værdier der er blevet rullet
         updateDiceImages();
-
         rollsLeft--;
-        //Vores all around check metode for at se hvilke felter spilleren evt. kunne plotte værdierne ind i
         checkValidFields();
-        //Denne her metode opdateren de valide felter med de værdier det ville ende med at give hvis spilleren valgte at plotte sin slag ind
+        updateScoreFields();
 
         let rollsLeftText = document.getElementById('rollsLeftText');
         rollsLeftText.textContent = rollsLeft;
     }
 }
 
-/*
-Metoden går ind og tjekker diceresults variablen hvilket bliver opdateret hver gang et nyt slag sker,
-herefter sætter den hver ternings billede til at stemme med hvadend værdi den endt med at blive
- */
+function onClickBlackDiceBtn() {
+    diceSkin = 'blackDice';
+    updateDiceImages();
+}
+
+function onClickNumberedDiceBtn() {
+    diceSkin = 'numberedDice3d';
+    updateDiceImages();
+}
+
 function updateDiceImages() {
     for (let i = 0; i < diceResults.length; i++) {
         let diceImage = document.getElementById(`dice${i + 1}`);
@@ -47,7 +47,6 @@ function updateDiceImages() {
     }
 }
 
-//selectDice metoden bliver kaldt når man trykker på en af terningbillederne i webappen, den sætter bare terningen trykket på inde i et array så vi kan huske på at den ikke skal rerolles
 function selectDice(index) {
     if (rollsLeft !== 3) {
         index = index - 1;
@@ -56,12 +55,6 @@ function selectDice(index) {
     }
 }
 
-/*
-checkvalidFields metoden er en samling af alle vores checkMetoder som ser om ens slag ville kunne bruges til noget på sit pointbræt
-en eksempel på hvordan det fungerer kunne være linje 69: vi kalder setFieldAvailablity på field aces hvilket er etternes inputfelt i pugfilen
-herefter kalder vi numberOfCategory som returner om et givet diceRoll stemmer overens med en sammenligning baseret på om den er mere eller mindre end target-værdien
-Hvis ja, så sætter vi fieldavailablity til true, hvis nej lader vi den ligge på false (da baseline er false for alle fields)
- */
 function checkValidFields() {
     if (rollsLeft < 3) {
         document.querySelectorAll('input[type="number"]').forEach((field) => {
@@ -87,8 +80,6 @@ function checkValidFields() {
     }
 }
 
-//fra linje 91 indtil line 176 har vi alle hjælpemetoderne som der bliver brugt i checkValidFields metoden, de følger allesammen den samme opskrift af:
-// De får et diceinput som der bliver brugt til at finde frem til om terningerne opnår en bestemt condition (f.eks full house eller straight) og returner enten 0/1 alt efter om det er sandt eller falsk
 function countDice(diceResults) {
     return diceResults.reduce((acc, die) => {
         acc[die] = (acc[die] || 0) + 1;
@@ -175,8 +166,6 @@ function numberOfCategory(diceResults, category) {
     return diceResults.filter((die) => die === category).length;
 }
 
-//SetFieldavailability metoden bliver brugt til at gøre koden i checkValidFields kortere ved at enkapsulere logikken et andet sted. Den får 2 parametre med, et fieldID, som den skal finde i pugefilen
-// og en boolean isAvailable som den bruger til at bestemme om fieldet skal være slukket eller ej
 function setFieldAvailability(fieldId, isAvailable) {
     let field = document.getElementById(fieldId);
     if (isAvailable) {
@@ -186,8 +175,6 @@ function setFieldAvailability(fieldId, isAvailable) {
     }
 }
 
-
-//Update gamestate er stedet vi laver vores temporary gamestate til en permanent en ved at at sende den til endpointet der holder styr på dem på server-siden
 function updateGameState(category, score) {
     fetch('/api/update-score', {
         method: 'POST',
@@ -204,7 +191,6 @@ function updateGameState(category, score) {
         });
 }
 
-//Metoden står for at opdatere værdierne i de forskellige inputfelter ved hvert slag, iden er at bruge metoderne fra line 91-176 til at beregne hvilken værdi de forskellige felter skal have og derefter opdatere dem
 function updateScoreFields(){
     document.querySelectorAll('input[type="number"]').forEach(field => {
         if(!field.classList.contains('held')){
@@ -235,7 +221,6 @@ function updateScoreFields(){
     })
 }
 
-//Bliver brugt til at resette alle felter der ikke er i "held" listen til 0 så man ikke kan plotte sit tidligere slag ind på sin næste tur
 function resetScoreFields(){
     document.querySelectorAll('input[type="number"]').forEach(field => {
         if(!field.classList.contains('held')){
@@ -244,7 +229,7 @@ function resetScoreFields(){
 
     })
 }
-//Den her listener lytter på de forskkelige inputfelter på brættet, og ligeså snart en af dem bliver trykket, gemmer den værdien som spilleren har plottet ind, sender det til serveren, og afslutter turn
+
 document.querySelectorAll('input[type="number"]').forEach(field => {
     field.addEventListener('click', function() {
         if (rollsLeft < 3 && !this.disabled) {
@@ -257,7 +242,7 @@ document.querySelectorAll('input[type="number"]').forEach(field => {
         }
     });
 });
-//Opdateter totals, hvilket lige nu er ubrugeligt da der ikke er totals lige nu
+
 function updateTotals() {
     let upperTotal = 0;
     let lowerTotal = 0;
@@ -287,9 +272,11 @@ function updateTotals() {
     document.getElementById('totalScore').innerText = upperTotal + lowerTotal;
 
 }
-//EndTurn metoden sender gamestaten til server og derefter fetchen end-turn endpointen på serversiden hvilket gør det til den næste spillers tur
-function endTurn() {
+
+async function endTurn() {
     const gameState = {
+        gameId: document.getElementById('gameID').innerText,
+        name: document.getElementById('player').innerText,
         diceResults: diceResults,
         diceHeld: diceHeld,
         rollsLeft: rollsLeft,
@@ -311,19 +298,14 @@ function endTurn() {
             yahtzee: document.getElementById('yahtzee').value,
             chance: document.getElementById('chance').value,
         }
-    };
+    }
+    console.log(gameState);
 
-    fetch('/end-turn', {
+    // Send the updated game state with player name to the server
+    await fetch('/end-turn', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ gameState }) // Send the updated game state
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({gameState}) // Send the updated game state
     })
-        .then(response => {
-            if (response.ok) {
-                console.log('Turn ended successfully');
-                window.location.reload(); // Reload the game to show the next player's turn
-            } else {
-                console.error('Error ending turn');
-            }
-        });
+
 }
