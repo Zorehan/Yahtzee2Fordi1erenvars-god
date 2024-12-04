@@ -1,0 +1,35 @@
+
+
+input {
+    font-size: medium;
+    color: orange;
+    border: 2px solid rgb(255, 50, 50);
+    border-radius: 10px;
+    background: transparent;
+    max-width: 6cm;
+    padding: 0.2cm;
+}
+  
+input:focus {
+    box-shadow: 2px 2px 10px sandybrown inset;
+    outline: none;
+}
+
+input:active {
+    box-shadow: 2px 2px 15px sandybrown inset;
+}
+
+input:hover {
+    box-shadow: 2px 2px 15px sandybrown inset, 2px 2px 5px rgb(150, 30, 30);
+}
+
+label {
+    font-size: 0.5cm;
+    color: black;
+    font-weight: 700;
+    position: relative;
+    top: 0.5rem;
+    margin: 0 0 0 7px;
+    padding: 0 3px;
+    width: fit-content;
+}

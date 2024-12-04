@@ -3,18 +3,18 @@ html(lang="en")
     head
         title= pageName
         link(rel="stylesheet", href="/css/loginPage.css")
+        link(rel="stylesheet", href="/css/forms.css")
+        link(rel="stylesheet", href="/css/inputsAndLabels.css")
         link(rel="stylesheet", href="/css/buttons.css")
     body
         div(id="login" class="loginPane")
-        h1= introduction
-        if error
-            p(style="color:red") #{error}
-        div(id="loginForm" class="buttonBox")
-            form(action="/login" method="POST")
-                label(for="username") Username:
-                input(type="text" id="username" name="username" required)
-                br
-                label(for="password") Password:
-                input(type="password" id="password" name="password" required)
-                br
-                button(type="submit") Login
+            h1= introduction
+            if error
+                p(style="color:red") #{error}
+            div(id="loginForm" class="formBox")
+                form(action="/login" method="POST")
+                    label(for="username") Username:
+                    input(type="text" id="username" name="username" required)
+                    label(for="password") Password:
+                    input(type="password" id="password" name="password" required)
+                    button(type="submit") Login
