@@ -10,9 +10,9 @@ html
         h1 Host a Game
         form(action="/menu/host", method="POST")
             label(for="gameID") Game ID:
-            input(type="text", name="gameID", id="gameID", required)
-            label(for="password") Password (optional):
-            input(type="text", name="password", id="password")
+            input(type="number", name="gameID", id="gameID", required)
+            label(for="playerList") List of player that can join seperated by commas
+            input(type="text", name="playerList", id="playerList")
             label(for="playerLimit") Player Limit:
             input(type="number", name="playerLimit", id="playerLimit", min="1", required)
             button(type="submit") Create Game
