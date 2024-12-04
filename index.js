@@ -332,29 +332,40 @@ app.get('/menu/host', (request, response) => {
 });
 
 app.post('/end-turn', async (req, res) => {
-    const { gameId, gameState } = req.body; // Received gameId and game state from client
+    const { gameState } = req.body;
+    const { playerName, diceResults, diceHeld, rollsLeft, scores } = gameState;
 
     try {
-        const games = await readGames();
-        const game = games.find((g) => g.gameId === parseInt(gameId));
+        // Find the game by its ID
+        const game = await getGameById(gameState.gameId);
 
         if (!game) {
             return res.status(404).send('Game not found.');
         }
 
-        if (req.session.user.username === game.player1.username) {
-            game.player1 = { ...game.player1, ...gameState };
-            game.currentTurn = "player2"; // Switch to player2
-        } else if (req.session.user.username === game.player2.username) {
-            game.player2 = { ...game.player2, ...gameState };
-            game.currentTurn = "player1"; // Switch to player1
+        // Find the player in the game
+        const player = game.players.find(p => p.name === playerName);
+
+        if (!player) {
+            return res.status(400).send('Player not found.');
         }
 
-        await writeGames(games);
-        res.redirect(`/game/${gameId}`);
+        // Update player data
+        player.diceResults = diceResults;
+        player.diceHeld = diceHeld;
+        player.rollsLeft = rollsLeft;
+        player.scores = scores;
+
+        // Update game data (current turn, etc.)
+        game.currentTurn = (game.currentTurn + 1) % game.players.length;
+
+        // Save the updated game state back to the database or file
+        await saveGameState(game);
+
+        res.status(200).send('Turn ended successfully.');
     } catch (err) {
-        console.error('Error ending turn:', err);
-        res.status(500).send('Error ending turn.');
+        console.error('Error processing turn:', err);
+        res.status(500).send('Server error.');
     }
 });
 
@@ -400,6 +411,30 @@ app.post('/start-game', (req, res) => {
     gameInProgress = true;
     res.redirect('/game');
 });
+
+async function saveGameState(game) {
+    try {
+        // Read the current games from the file
+        const games = await readGames();
+
+        // Find the game by its ID and update it
+        const gameIndex = games.findIndex((g) => g.gameId === game.gameId);
+        if (gameIndex === -1) {
+            console.error('Game not found.');
+            return;
+        }
+
+        // Update the game state with the new data
+        games[gameIndex] = game;
+
+        // Write the updated game state back to the file
+        await writeGames(games);
+
+        console.log('Game state saved successfully');
+    } catch (err) {
+        console.error('Error saving game state:', err);
+    }
+}
 
 app.listen(3000, '192.168.213.207')
 

@@ -275,6 +275,7 @@ function updateTotals() {
 
 function endTurn() {
     const gameState = {
+        playerName: document.getElementById('player').innerText,
         diceResults: diceResults,
         diceHeld: diceHeld,
         rollsLeft: rollsLeft,
@@ -296,8 +297,10 @@ function endTurn() {
             yahtzee: document.getElementById('yahtzee').value,
             chance: document.getElementById('chance').value,
         }
-    };
+    }
+    console.log(gameState);
 
+    // Send the updated game state with player name to the server
     fetch('/end-turn', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
