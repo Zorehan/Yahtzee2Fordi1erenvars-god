@@ -242,6 +242,7 @@ app.post('/menu/host', async (request, response) => {
         response.redirect('/menu/createAccount');
 
     }
+});
 
     async function makeAcc(newAcc) {
         await playerLogins.push(newAcc)
@@ -313,7 +314,7 @@ app.post('/menu/host', async (request, response) => {
         response.redirect('/menu/host');
 
     });
-});
+
 app.get('/menu/host', (request, response) => {
     if (request.session.user) {
         readGames().then((games) => {
@@ -333,18 +334,21 @@ app.get('/menu/host', (request, response) => {
 
 app.post('/end-turn', async (req, res) => {
     const { gameState } = req.body;
-    const { playerName, diceResults, diceHeld, rollsLeft, scores } = gameState;
+    console.log(gameState);
 
     try {
+        // Ensure gameState contains the correct properties
+        const { gameId, name, diceResults, diceHeld, rollsLeft, diceSkin, scores } = gameState;
+
         // Find the game by its ID
-        const game = await getGameById(gameState.gameId);
+        const game = await getGameById(gameId);
 
         if (!game) {
             return res.status(404).send('Game not found.');
         }
 
         // Find the player in the game
-        const player = game.players.find(p => p.name === playerName);
+        const player = game.players.find(p => p.name === name);
 
         if (!player) {
             return res.status(400).send('Player not found.');
@@ -354,6 +358,7 @@ app.post('/end-turn', async (req, res) => {
         player.diceResults = diceResults;
         player.diceHeld = diceHeld;
         player.rollsLeft = rollsLeft;
+        player.diceSkin = diceSkin; // Make sure to update dice skin as well if needed
         player.scores = scores;
 
         // Update game data (current turn, etc.)

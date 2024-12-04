@@ -273,9 +273,10 @@ function updateTotals() {
 
 }
 
-function endTurn() {
+async function endTurn() {
     const gameState = {
-        playerName: document.getElementById('player').innerText,
+        gameId: document.getElementById('gameID').innerText,
+        name: document.getElementById('player').innerText,
         diceResults: diceResults,
         diceHeld: diceHeld,
         rollsLeft: rollsLeft,
@@ -301,17 +302,10 @@ function endTurn() {
     console.log(gameState);
 
     // Send the updated game state with player name to the server
-    fetch('/end-turn', {
+    await fetch('/end-turn', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ gameState }) // Send the updated game state
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({gameState}) // Send the updated game state
     })
-        .then(response => {
-            if (response.ok) {
-                console.log('Turn ended successfully');
-                window.location.reload(); // Reload the game to show the next player's turn
-            } else {
-                console.error('Error ending turn');
-            }
-        });
+
 }

@@ -8,6 +8,7 @@ html(lang="en")
     body
         h1 Yahtzee Game
         h2(id="player")= player.name
+        h3(id="gameID")= game.gameId
 
         #diceBox
             #diceImages
@@ -38,42 +39,7 @@ html(lang="en")
                     tr.totalRow
                         td Samlet point øverst:
                         td#upperTotal= player.scores.aces + player.scores.twos + player.scores.threes + player.scores.fours + player.scores.fives + player.scores.sixes
-                    tr
-                        td Et Par
-                        td
-                            input(type="number", id="onePair", disabled)
-                    tr
-                        td To Par
-                        td
-                            input(type="number", id="twoPairs", disabled)
-                    tr
-                        td Tre ens:
-                        td
-                            input(type="number", id="threeOfAKind", disabled)
-                    tr
-                        td Fire ens:
-                        td
-                            input(type="number", id="fourOfAKind", disabled)
-                    tr
-                        td Fuld hus:
-                        td
-                            input(type="number", id="fullHouse", disabled)
-                    tr
-                        td Lille straight:
-                        td
-                            input(type="number", id="smallStraight", disabled)
-                    tr
-                        td Stor straight:
-                        td
-                            input(type="number", id="largeStraight", disabled)
-                    tr
-                        td Yahtzee:
-                        td
-                            input(type="number", id="yahtzee", disabled)
-                    tr
-                        td Chance:
-                        td
-                            input(type="number", id="chance", disabled)
+
                     tr.totalRow
                         td Samlet point nederest:
                         td#lowerTotal= player.scores.onePair + player.scores.twoPairs + player.scores.threeOfAKind + player.scores.fourOfAKind + player.scores.fullHouse + player.scores.smallStraight + player.scores.largeStraight + player.scores.yahtzee + player.scores.chance
@@ -86,5 +52,5 @@ html(lang="en")
             button(id="Skin" onclick="onClickNumberedDiceBtn()") Numbered Dice 3D
 
         #turnEndButton
-            form(action="/end-turn", method="POST")
+            form(action="/end-turn", method="GET")
                 button(type="submit") End Turn
