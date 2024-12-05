@@ -27,15 +27,6 @@ function rollDice() {
     }
 }
 
-function onClickBlackDiceBtn() {
-    diceSkin = 'blackDice';
-    updateDiceImages();
-}
-
-function onClickNumberedDiceBtn() {
-    diceSkin = 'numberedDice3d';
-    updateDiceImages();
-}
 
 function updateDiceImages() {
     for (let i = 0; i < diceResults.length; i++) {
@@ -64,7 +55,7 @@ function checkValidFields() {
             if (!field.classList.contains('held')) field.disabled = false;
         });
 
-        setFieldAvailability('aces', numberOfCategory(diceResults, 1) > 0);
+        setFieldAvailability('aces', numberOfCategory(diceResults, 1) > 0 );
         setFieldAvailability('twos', numberOfCategory(diceResults, 2) > 0);
         setFieldAvailability('threes', numberOfCategory(diceResults, 3) > 0);
         setFieldAvailability('fours', numberOfCategory(diceResults, 4) > 0);
@@ -178,22 +169,6 @@ function setFieldAvailability(fieldId, isAvailable) {
     }
 }
 
-function updateGameState(category, score) {
-    fetch('/api/update-score', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ category, score }),
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.success) {
-                console.log('Score updated successfully:', data.gameState);
-            } else {
-                console.error('Error updating score:', data.message);
-            }
-        });
-}
-
 function updateScoreFields(){
     document.querySelectorAll('input[type="number"]').forEach(field => {
         if(!field.classList.contains('held')){
@@ -218,7 +193,7 @@ function updateScoreFields(){
                 case 'yahtzee': score = yatzy(diceResults); break;
                 case 'chance': score = chance(diceResults); break;
             }
-
+            if(field.value == "")
             field.value = score;
         }
     })
@@ -226,7 +201,7 @@ function updateScoreFields(){
 
 function resetScoreFields(){
     document.querySelectorAll('input[type="number"]').forEach(field => {
-        if(!field.classList.contains('held')){
+        if(!field.disabled){
             field.value = ""
         }
 
@@ -304,11 +279,10 @@ async function endTurn() {
     }
     console.log(gameState);
 
-    // Send the updated game state with player name to the server
     await fetch('/end-turn', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({gameState}) // Send the updated game state
+        body: JSON.stringify({gameState})
     })
 
 }

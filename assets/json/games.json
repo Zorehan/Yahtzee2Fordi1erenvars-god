@@ -278,11 +278,11 @@
       {
         "name": "kimo",
         "diceResults": [
-          1,
-          1,
-          1,
-          1,
-          1
+          2,
+          5,
+          5,
+          6,
+          4
         ],
         "diceHeld": [
           false,
@@ -291,29 +291,29 @@
           false,
           false
         ],
-        "rollsLeft": 3,
+        "rollsLeft": 2,
         "diceSkin": "whiteDice",
         "scores": {
-          "aces": "",
+          "aces": "0",
           "twos": "",
-          "threes": "",
+          "threes": "0",
           "fours": "",
           "fives": "",
           "sixes": "",
-          "onePair": "",
-          "twoPairs": "",
-          "threeOfAKind": "",
-          "fourOfAKind": "",
-          "fullHouse": "",
-          "smallStraight": "",
-          "largeStraight": "",
-          "yahtzee": "",
+          "onePair": "10",
+          "twoPairs": "0",
+          "threeOfAKind": "0",
+          "fourOfAKind": "0",
+          "fullHouse": "0",
+          "smallStraight": "0",
+          "largeStraight": "0",
+          "yahtzee": "0",
           "chance": ""
         }
       }
     ],
     "maxPlayers": "2",
-    "currentTurn": 0
+    "currentTurn": 1
   },
   {
     "gameId": 78,
@@ -393,5 +393,163 @@
     ],
     "maxPlayers": "2",
     "currentTurn": 1
+  },
+  {
+    "gameId": 345,
+    "players": [
+      {
+        "name": "kimo",
+        "diceResults": [
+          5,
+          1,
+          5,
+          4,
+          4
+        ],
+        "diceHeld": [
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "rollsLeft": 0,
+        "diceSkin": "whiteDice",
+        "scores": {
+          "aces": "",
+          "twos": "1",
+          "threes": "1",
+          "fours": "1",
+          "fives": "",
+          "sixes": "1",
+          "onePair": "",
+          "twoPairs": "",
+          "threeOfAKind": "0",
+          "fourOfAKind": "0",
+          "fullHouse": "0",
+          "smallStraight": "0",
+          "largeStraight": "0",
+          "yahtzee": "0",
+          "chance": ""
+        }
+      },
+      {
+        "name": "gærgryn",
+        "diceResults": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "diceHeld": [
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "rollsLeft": 3,
+        "diceSkin": "whiteDice",
+        "scores": {
+          "aces": "",
+          "twos": "",
+          "threes": "",
+          "fours": "",
+          "fives": "",
+          "sixes": "",
+          "onePair": "",
+          "twoPairs": "",
+          "threeOfAKind": "",
+          "fourOfAKind": "",
+          "fullHouse": "",
+          "smallStraight": "",
+          "largeStraight": "",
+          "yahtzee": "",
+          "chance": ""
+        }
+      }
+    ],
+    "maxPlayers": "3",
+    "currentTurn": 1
+  },
+  {
+    "gameId": 349,
+    "players": [
+      {
+        "name": "kimo",
+        "diceResults": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "diceHeld": [
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "rollsLeft": 3,
+        "diceSkin": "whiteDice",
+        "scores": {
+          "aces": "",
+          "twos": "",
+          "threes": "",
+          "fours": "",
+          "fives": "",
+          "sixes": "",
+          "onePair": "",
+          "twoPairs": "",
+          "threeOfAKind": "",
+          "fourOfAKind": "",
+          "fullHouse": "",
+          "smallStraight": "",
+          "largeStraight": "",
+          "yahtzee": "",
+          "chance": ""
+        }
+      },
+      {
+        "name": "gærgryn",
+        "diceResults": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "diceHeld": [
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "rollsLeft": 3,
+        "diceSkin": "whiteDice",
+        "scores": {
+          "aces": "",
+          "twos": "",
+          "threes": "",
+          "fours": "",
+          "fives": "",
+          "sixes": "",
+          "onePair": "",
+          "twoPairs": "",
+          "threeOfAKind": "",
+          "fourOfAKind": "",
+          "fullHouse": "",
+          "smallStraight": "",
+          "largeStraight": "",
+          "yahtzee": "",
+          "chance": ""
+        }
+      }
+    ],
+    "maxPlayers": "2",
+    "currentTurn": 0
   }
 ]
