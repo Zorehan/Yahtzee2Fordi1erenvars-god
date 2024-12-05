@@ -8,8 +8,8 @@ app.use(express.static('assets'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'pug');
-app.use(express.static(path.join(__dirname, 'assets')));
-app.use(express.static(path.join(__dirname, 'assets/css')));
+//app.use(express.static(path.join(__dirname, 'assets')));
+//app.use(express.static(path.join(__dirname, 'assets/css')));
 app.use(
     session({
         secret: 'bailabaila',
@@ -159,7 +159,7 @@ app.get('/menu/join', async (req, res) => {
         const games = await readGames(); // Read all games from games.json
 
         // Filter games based on whether the players array has less than 2 players
-        const availableGames = games.filter(game => game.players && game.players.length < 3 );
+        const availableGames = games.filter(game => game.players && game.players.length > 0 );
 
         // Log filtered games for debugging
         console.log('Available games:', availableGames);
@@ -490,5 +490,8 @@ async function saveGameState(game) {
     }
 }
 
-app.listen(3000, '192.168.213.207')
+console.log('Server started on http://localhost:6789')
+
+app.listen(6789)
+//app.listen(3000, '192.168.213.207')
 

@@ -2,6 +2,7 @@ let diceResults = [1, 1, 1, 1, 1];
 let diceHeld = [false, false, false, false, false];
 let rollsLeft = 3;
 let diceSkin = 'whiteDice';
+let audio = new Audio('/audio/chokchokchok.m4a');
 
 function rollDie() {
     return Math.floor(Math.random() * 6) + 1;
@@ -21,6 +22,9 @@ function rollDice() {
 
         let rollsLeftText = document.getElementById('rollsLeftText');
         rollsLeftText.textContent = rollsLeft;
+
+        
+        audio.play();
     }
 }
 
@@ -277,9 +281,9 @@ async function endTurn() {
     const gameState = {
         gameId: document.getElementById('gameID').innerText,
         name: document.getElementById('player').innerText,
-        diceResults: diceResults,
-        diceHeld: diceHeld,
-        rollsLeft: rollsLeft,
+        diceResults: [1, 1, 1, 1, 1],
+        diceHeld: [false, false, false, false, false],
+        rollsLeft: 3,
         diceSkin: diceSkin,
         scores: {
             aces: document.getElementById('aces').value,
@@ -297,7 +301,8 @@ async function endTurn() {
             largeStraight: document.getElementById('largeStraight').value,
             yahtzee: document.getElementById('yahtzee').value,
             chance: document.getElementById('chance').value,
-        }
+        },
+        currentTurn: +1
     }
     console.log(gameState);
 

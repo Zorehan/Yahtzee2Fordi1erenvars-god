@@ -1,0 +1,28 @@
+#diceBox {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    max-width: 60vw;
+    min-width: 200px;
+    padding: 1%;
+    gap: 1%;
+}
+
+
+/* Dice box div */
+#diceImages {
+    display: flex;
+
+    /* scale */
+    max-width: 100%;
+    min-width: 0%;
+
+    gap: 1%;
+}
+
+#diceImages img {
+    object-fit: cover; /* Ensures the image covers the container without distortion */
+    flex: 1 1 auto;
+    max-width: 100%;
+    min-width: 0%;
+}
