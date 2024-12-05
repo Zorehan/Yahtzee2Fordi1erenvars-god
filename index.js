@@ -8,7 +8,8 @@ app.use(express.static('assets'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'pug');
-app.use(express.static('assets'));
+app.use(express.static(path.join(__dirname, 'assets')));
+app.use(express.static(path.join(__dirname, 'assets/css')));
 app.use(
     session({
         secret: 'bailabaila',
@@ -34,7 +35,7 @@ fs.readFile(loginsPath, 'utf-8', (err, data) => {
 });
 
 let gameStates = {
-    gameId: 0,
+    gameId: 12,
     player1: {
         diceResults: [1, 1, 1, 1, 1],
         diceHeld: [false, false, false, false, false],
@@ -224,23 +225,71 @@ app.post('/menu/join', async (req, res) => {
 
 // Hosting a new game
 app.post('/menu/host', async (request, response) => {
-    const {gameID, password, playerLimit} = request.body;
+    const { gameID, playerList, playerLimit } = request.body;
 
-    if (!isUsed) {
-        const acc = {
-            username: username,
-            password: password
-        }
-        const err = await makeAcc(acc);
-        if (err) {
-            response.redirect('/menu/createAccount');
-        } else {
-            request.session.user = {username};
-            response.redirect('/menu');
-        }
-    } else {
-        response.redirect('/menu/createAccount');
+    if (!gameID || playerLimit <= 0) {
+        return response.status(400).send('Invalid game ID or player limit.');
+    }
 
+    try {
+        const games = await readGames();
+
+        // Check if the game already exists
+        if (games.some((game) => game.gameId === gameID)) {
+            return response.status(400).send('Game ID already exists.');
+        }
+
+        // Parse the player list and add the host as the first player
+        const playerNames = playerList.split(',').map(name => name.trim()).filter(name => name);
+        if (!playerNames.includes(request.session.user.username)) {
+            playerNames.unshift(request.session.user.username); // Ensure the host is included
+        }
+        if (playerNames.length > playerLimit) {
+            return response.status(400).send('Number of players exceeds the player limit.');
+        }
+
+        // Initialize players with default data
+        const players = playerNames.map(name => ({
+            name,
+            diceResults: [1, 1, 1, 1, 1],
+            diceHeld: [false, false, false, false, false],
+            rollsLeft: 3,
+            diceSkin: "whiteDice",
+            scores: {
+                aces: "",
+                twos: "",
+                threes: "",
+                fours: "",
+                fives: "",
+                sixes: "",
+                onePair: "",
+                twoPairs: "",
+                threeOfAKind: "",
+                fourOfAKind: "",
+                fullHouse: "",
+                smallStraight: "",
+                largeStraight: "",
+                yahtzee: "",
+                chance: ""
+            }
+        }));
+
+        // Create the game object
+        const newGame = {
+            gameId: parseInt(gameID),
+            players,
+            maxPlayers: playerLimit,
+            currentTurn: 0 // Starting with the first player in the list
+        };
+
+        // Add the new game to the list and save
+        games.push(newGame);
+        await writeGames(games);
+
+        response.redirect('/menu/host');
+    } catch (error) {
+        console.error('Error writing to games.json:', error);
+        response.status(500).send('Server error');
     }
 });
 
@@ -441,5 +490,6 @@ async function saveGameState(game) {
     }
 }
 
-app.listen(3000)
+console.log('Server started on http://localhost:6789');
+app.listen(6789)
 
