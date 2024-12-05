@@ -2,6 +2,7 @@ let diceResults = [1, 1, 1, 1, 1];
 let diceHeld = [false, false, false, false, false];
 let rollsLeft = 3;
 let diceSkin = 'whiteDice';
+let audio = new Audio('/audio/chokchokchok.m4a');
 
 function rollDie() {
     return Math.floor(Math.random() * 6) + 1;
@@ -21,6 +22,8 @@ function rollDice() {
 
         let rollsLeftText = document.getElementById('rollsLeftText');
         rollsLeftText.textContent = rollsLeft;
+
+        audio.play();
     }
 }
 

@@ -490,5 +490,6 @@ async function saveGameState(game) {
     }
 }
 
-app.listen(3000, '192.168.213.207')
+console.log('Server started on http://localhost:6789');
+app.listen(6789)
 
