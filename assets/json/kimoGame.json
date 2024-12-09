@@ -1,0 +1,102 @@
+[
+    {
+        "gameName": "",
+        "gameId": 0,
+        "maxPlayers": 0,
+        "gameBoard":{
+            "round": 0,
+            "turn": "",
+            "gameBoard":{
+                "diceResults": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "diceHeld": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                ],
+                "rollsLeft": 3,
+                "diceSkin": "whiteDice",
+                "scores": {
+                    "numbers":{
+                        "aces": 0,
+                        "twos": 0,
+                        "threes": 0,
+                        "fours": 0,
+                        "fives": 0,
+                        "sixes": 0
+                    },
+                    "sets":{
+                        "onePair": 0,
+                        "twoPairs": 0,
+                        "threeOfAKind": 0,
+                        "fourOfAKind": 0,
+                        "fullHouse": 0,
+                        "smallStraight": 0,
+                        "largeStraight": 0,
+                        "yahtzee": 0,
+                        "chance": 0
+                    }
+                }
+            }
+        },
+        "players": [
+            {
+                "name": "gærgryn",
+                "diceSkin": "whiteDice",
+                "scores": {
+                    "numbers":{
+                        "aces": -1,
+                        "twos": -1,
+                        "threes": -1,
+                        "fours": -1,
+                        "fives": -1,
+                        "sixes": -1
+                    },
+                    "sets":{
+                        "onePair": -1,
+                        "twoPairs": -1,
+                        "threeOfAKind": -1,
+                        "fourOfAKind": -1,
+                        "fullHouse": -1,
+                        "smallStraight": -1,
+                        "largeStraight": -1,
+                        "yahtzee": -1,
+                        "chance": -1
+                    }
+                }
+            },
+            {
+                "name": "kimo",
+                "diceSkin": "whiteDice",
+                "scores": {
+                    "numbers":{
+                        "aces": -1,
+                        "twos": -1,
+                        "threes": -1,
+                        "fours": -1,
+                        "fives": -1,
+                        "sixes": -1
+                    },
+                    "sets":{
+                        "onePair": -1,
+                        "twoPairs": -1,
+                        "threeOfAKind": -1,
+                        "fourOfAKind": -1,
+                        "fullHouse": -1,
+                        "smallStraight": -1,
+                        "largeStraight": -1,
+                        "yahtzee": -1,
+                        "chance": -1
+                    }
+                }
+            }
+        ]
+    }
+]

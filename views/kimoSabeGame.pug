@@ -27,6 +27,17 @@ html(lang="en")
                 form(action="/roll" method="POST")
                     button(type="submit", id="roll") Roll
 
+            div(id="scoreBox")
+                div(id="numberScores", class="scoreFields")
+                    each value, category in player.scores.numbers
+                        div(id=`${category}Row`, class="scoreField")
+                            label(for=`${category}Input`) #{category}:
+                            input(type="number", id=`${category}Input`, class="score", value=value, disabled)
+                div(id="setScores", class="scoreFields")
+                    each value, category in player.scores.sets
+                        div(id=`${category}Row`, class="scoreField")
+                            label(for=`${category}Input`) #{category}:
+                            input(type="number", id=`${category}Input`, class="score", value=value, disabled)
             #scoreBox
                 table
                     thead

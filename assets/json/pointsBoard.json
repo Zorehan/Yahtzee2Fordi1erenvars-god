@@ -1,0 +1,28 @@
+[
+    {
+        "settingName": "basic",
+        "dice": 5,
+        "points": {
+            "numbers":{
+                "aces": "sum",
+                "twos": "sum",
+                "threes": "sum",
+                "fours": "sum",
+                "fives": "sum",
+                "sixes": "sum"
+            },
+            "bonus": 50,
+            "sets":{
+                "onePair": "sum",
+                "twoPairs": "sum",
+                "threeOfAKind": "sum",
+                "fourOfAKind": "sum",
+                "fullHouse": "sum",
+                "smallStraight": 15,
+                "largeStraight": 20,
+                "yahtzee": 50,
+                "chance": "sum"
+            }
+        }
+    }
+]
